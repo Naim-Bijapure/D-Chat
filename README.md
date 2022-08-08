@@ -2,9 +2,9 @@
 A Chat Dapp that is built on the Lukso network and leverages the Lukso Standards Proposals(LSPs) and Universal Profies to create a highly decentralized chat application the is blockchain based.
 
 # Tech Stack
- 🏗 Scaffold-Eth-next Typescript
- erc725.js
- lsp-contracts.js
+ - 🏗 Scaffold-Eth-next Typescript<br />
+ - erc725.js<br />
+ - lsp-contracts.js<br />
 
 ## Typescript
 
