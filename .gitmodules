@@ -7,3 +7,12 @@
 [submodule "packages/foundry-ts/lib/openzeppelin-contracts"]
 	path = packages/foundry-ts/lib/openzeppelin-contracts
 	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "packages/foundry-ts/lib/lsp-smart-contracts"]
+	path = packages/foundry-ts/lib/lsp-smart-contracts
+	url = https://github.com/lukso-network/lsp-smart-contracts
+[submodule "packages/foundry-ts/lib/solidity-bytes-utils"]
+	path = packages/foundry-ts/lib/solidity-bytes-utils
+	url = https://github.com/GNSPS/solidity-bytes-utils
+[submodule "packages/foundry-ts/lib/ERC725"]
+	path = packages/foundry-ts/lib/ERC725
+	url = https://github.com/ERC725Alliance/ERC725

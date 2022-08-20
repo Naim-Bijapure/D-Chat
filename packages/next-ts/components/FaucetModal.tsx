@@ -45,7 +45,7 @@ const FaucetModal: React.FC = () => {
   };
   return (
     <>
-      <div className={`${isFaucetVisible === false ? "hidden" : "block"}`}>
+      <div className={`${isFaucetVisible === false ? "hidden" : "block z-[10000]"}`}>
         <label
           htmlFor="faucetModal"
           className="fixed p-3 text-4xl text-orange-500 rounded-full shadow-md cursor-pointer bottom-[15%] lg:bottom-[10%] left-[80%] lg:left-[93%] bg-base-300"

@@ -1,83 +1,111 @@
-import { BigNumberish } from "ethers";
-import { formatEther } from "ethers/lib/utils";
 import type { NextPage } from "next";
-import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAccount, useBalance } from "wagmi";
 
-import useAppLoadContract from "../hooks/useAppLoadContract";
+import ChatView from "../components/Chat/ChatView";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const Home: NextPage = () => {
   const [contractPurpose, setContractPurpose] = useState<string>("");
+  // local storage states
+  const [chatMetaData, setChatMetaData] = useLocalStorage("chatMetaData", {
+    activeChat: false,
+    chatUsers: [],
+    UP_ADDRESS: "",
+    VAULT_ADDRESS: "",
+    DYNAMIC_KEY: "",
+  });
+
   const { address } = useAccount();
   const { data } = useBalance({ addressOrName: address });
 
-  const YourContract = useAppLoadContract({
-    contractName: "YourContract",
-  });
+  // const YourContract = useAppLoadContract({
+  //   contractName: "YourContract",
+  // });
 
-  const getPurpose = useCallback(async () => {
-    const purpose = await YourContract?.purpose();
-    console.log("Purpose", purpose);
-    setContractPurpose(purpose as string);
-  }, [YourContract]);
+  // const getPurpose = useCallback(async () => {
+  //   const purpose = await YourContract?.purpose();
+  //   console.log("Purpose", purpose);
+  //   setContractPurpose(purpose as string);
+  // }, [YourContract]);
 
-  useEffect(() => {
-    void getPurpose();
-  }, [YourContract, getPurpose]);
+  // useEffect(() => {
+  //   // console.log("chatData: ", chatMetaData);
+  // }, [chatMetaData]);
+
+  const onStartChat: () => any = async (): Promise<any> => {
+    const BASE_URL = window.location.origin;
+    // grant the user permission
+    let response = await fetch(`${BASE_URL}/api/grantPermission?address=${address}`);
+    response = await response.json();
+    console.log("response: ", response);
+
+    const UP_ADDRESS = response["UP_ADDRESS"];
+    const VAULT_ADDRESS = response["VAULT_ADDRESS"];
+
+    // temp connect user api (make it dynamimc with randomly user connection)
+    let connectedUserData = await fetch(`${BASE_URL}/api/connectUser`);
+    connectedUserData = await connectedUserData.json();
+    const DYNAMIC_KEY = connectedUserData["dynamicKey"];
+    console.log("connectedUserData: ", connectedUserData);
+
+    setChatMetaData({
+      ...chatMetaData,
+      chatUsers: [...connectedUserData["chatUsers"]],
+      activeChat: true,
+      UP_ADDRESS,
+      VAULT_ADDRESS,
+      DYNAMIC_KEY,
+    });
+  };
+
+  const onTest: () => any = () => {
+    const addrArray = [
+      "0x7cC872ADc952186D7E9C8C8575cb407cb4046230",
+      "0xDc33aB45de06754C667d438f1C975C3c45a986E1",
+      "0x0fAb64624733a7020D332203568754EB1a37DB89",
+    ];
+    // const result = addrArray.sort();
+    const result = addrArray;
+    console.log("result: ", result);
+
+    window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const onDeleteChat: () => any = async (): Promise<any> => {
+    setChatMetaData({
+      activeChat: false,
+    });
+    // window.location.reload();
+  };
+
+  // console.log("chatMetaData: ", chatMetaData);
 
   return (
     <>
-      <main>
-        <div className="flex flex-col flex-no-wrap items-center content-center justify-center">
-          <div className="m-8">
-            <span className="mr-2">📝</span>
-            This Is Your App Home. You can start editing it in{" "}
-            <span className="font-bold bg-primary-content">packages/next-ts/pages/index.tsx</span> folder
-          </div>
+      <main className="flex items-start justify-around h-[100%]">
+        {/* on active chat */}
 
-          <div className="m-8">
-            <span className="mr-2">✏️</span>
-            Edit your smart contract <span className="font-bold bg-primary-content">YourContract.sol</span> in{" "}
-            <span className="font-bold bg-primary-content">packages/foundry-ts/src</span>
+        <button className="btn btn-primary" onClick={onTest}>
+          Test
+        </button>
+
+        {chatMetaData && chatMetaData["activeChat"] === true && (
+          <div className="w-[100%]">
+            <ChatView onDeleteChat={onDeleteChat} chatMetaData={chatMetaData} setChatMetaData={setChatMetaData} />
           </div>
-          {contractPurpose ? (
-            <div className="m-8">
-              <span className="mr-2">🤓</span>
-              The &quot;purpose&quot; variable from your contract is{" "}
-              <span className="font-bold bg-primary-content">{contractPurpose}</span>
-            </div>
-          ) : (
-            <div className="m-8">
-              <span className="mr-2">👷‍♀️</span>
-              You haven&apos;t deployed your contract yet, run{" "}
-              <span className="font-bold bg-primary-content">yarn chain</span> and{" "}
-              <span className="font-bold bg-primary-content">yarn deploy</span> to deploy your first contract!
-            </div>
-          )}
-          <div className="m-8">
-            <span className="mr-2">🤖</span>
-            An example to get your balance:{" "}
-            <span className="font-bold text-green-900">{data && formatEther(data?.value as BigNumberish)}</span> for
-            address <span className="font-bold bg-primary-content">{address}</span> from wagmi hooks!
+        )}
+
+        {chatMetaData && chatMetaData["activeChat"] === false && (
+          <div className="self-center w-[50%]">
+            <button className="btn btn-primary" onClick={onStartChat}>
+              start random chat
+            </button>
           </div>
-          <div className="m-8">
-            <span className="mr-2">💭</span>
-            Check out the{" "}
-            <Link href={"/Hints"}>
-              <span className="link link-primary">Hints</span>
-            </Link>{" "}
-            tab for more tips.
-          </div>
-          <div className="m-8">
-            <span className="mr-2">🛠</span>
-            Tinker with your smart contract using the
-            <Link href={"/Debug"}>
-              <span className="mx-2 link link-primary">Debug</span>
-            </Link>{" "}
-            tab.
-          </div>
-        </div>
+        )}
+
+        {/* extra side info */}
+        {/* <div className="w-[10%]">extra info display view if needed</div> */}
       </main>
     </>
   );

@@ -36,10 +36,31 @@ export const targetNetowrks = (requiredChains: string[]): Chain[] => {
 /** ----------------------
  * RAINBOW KIT COFIGS
  * ---------------------*/
+const luksoChain: Chain = {
+  id: 2828,
+  name: "Lukso",
+  network: "lukso",
+  //@ts-ignore
+  iconUrl: "https://docs.lukso.tech/img/logo.png",
+  // iconBackground: "#fff",
+  nativeCurrency: {
+    decimals: 18,
+    name: "lukso",
+    symbol: "LYXt",
+  },
+  rpcUrls: {
+    default: "https://rpc.l16.lukso.network",
+  },
+  blockExplorers: {
+    default: { name: "SnowTrace", url: "https://explorer.execution.l16.lukso.network" },
+  },
+  testnet: false,
+};
+
 export const targedChains = targetNetowrks([...TARGATED_CHAINS]);
 
 export const { chains, provider } = configureChains(
-  [...targedChains],
+  [...targedChains, luksoChain],
   // [alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }), publicProvider()]
   [publicProvider()]
 ); // <---- configure your custom chain
