@@ -5,6 +5,7 @@ import LSP6Schema from "@erc725/erc725.js/schemas/LSP6KeyManager.json";
 import LSP9Vault from "@erc725/erc725.js/schemas/LSP9Vault.json";
 import KeyManager from "@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json";
 import UniversalProfile from "@lukso/lsp-smart-contracts/artifacts/UniversalProfile.json";
+import axios from "axios";
 import { ContractInterface, ethers, Signer } from "ethers";
 import type { NextPage } from "next";
 import React, { useEffect, useState } from "react";
@@ -14,6 +15,7 @@ import { TbSend } from "react-icons/tb";
 import { useAccount, useSigner } from "wagmi";
 
 import { Vault, Vault__factory } from "../../contracts/contract-types";
+import { connectUserReponseType } from "../../types";
 
 const KEY_NAME = "chat:<string>:<string>";
 
@@ -31,11 +33,14 @@ const chatSchema = {
 
 erc725schema.push(chatSchema);
 
-const ChatView: NextPage<{ onDeleteChat: () => any; chatMetaData: any; setChatMetaData: (arg: any) => any }> = ({
-  onDeleteChat,
-  chatMetaData,
-  setChatMetaData,
-}) => {
+interface IChatView {
+  onDeleteChat: () => any;
+  chatMetaData: any;
+  setChatMetaData: (arg: any) => any;
+  interests: string[];
+}
+
+const ChatView: NextPage<IChatView> = ({ onDeleteChat, chatMetaData, setChatMetaData, interests }) => {
   // const [chatMetaData, setChatMetaData] = useLocalStorage("chatMetaData", {
   //   activeChat: false,
   //   chatUsers: [],
@@ -46,6 +51,7 @@ const ChatView: NextPage<{ onDeleteChat: () => any; chatMetaData: any; setChatMe
   const { address } = useAccount();
   const { data: signer } = useSigner();
 
+  // l-states
   const [erc725, setErc725] = useState<ERC725>();
   const [up, setUp] = useState<ethers.Contract>();
   const [vault, setVault] = useState<Vault | any>();
@@ -53,7 +59,9 @@ const ChatView: NextPage<{ onDeleteChat: () => any; chatMetaData: any; setChatMe
   const [chatMessage, setChatMessage] = useState<string>("");
   const [dynamicKey, setDynamicKey] = useState<string>("");
   const [messagesData, setMessagesData] = useState<any[]>([]);
+  const [isFinding, setIsFinding] = useState<boolean>(false);
 
+  // l-mehtods
   const loadContracts: () => any = async () => {
     console.log("chatMetaData: ", chatMetaData);
     const { UP_ADDRESS, VAULT_ADDRESS, DYNAMIC_KEY } = chatMetaData;
@@ -113,9 +121,10 @@ const ChatView: NextPage<{ onDeleteChat: () => any; chatMetaData: any; setChatMe
 
   const onSendMessage: () => any = async (): Promise<any> => {
     const users = [...chatMetaData["chatUsers"]];
+    console.log("dynamicKey: ", dynamicKey);
 
     const oldChatData = await vault["getData(bytes32)"](dynamicKey);
-    // console.log("vaultChatDataBefore: ", oldChatData);
+    console.log("oldChatData: ", oldChatData);
 
     const vaultDecodedStringBefore = erc725?.decodeData({
       // @ts-ignore
@@ -169,6 +178,32 @@ const ChatView: NextPage<{ onDeleteChat: () => any; chatMetaData: any; setChatMe
     setChatMessage("");
   };
 
+  const onNewChat: () => any = async () => {
+    const reqData = {
+      address,
+      interests,
+      operationType: "findUser",
+    };
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+      ...reqData,
+    });
+    console.log("connectedUserData: ", connectedUserData);
+    setIsFinding(true);
+  };
+
+  const onEndChat: () => any = async () => {
+    const reqData = {
+      address,
+      interests,
+      operationType: "findUser",
+    };
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+      ...reqData,
+    });
+    console.log("connectedUserData: ", connectedUserData);
+  };
+
+  // l-useeffect
   useEffect(() => {
     if (signer && chatMetaData && chatMetaData["activeChat"] === true) {
       void loadContracts();
@@ -201,7 +236,6 @@ const ChatView: NextPage<{ onDeleteChat: () => any; chatMetaData: any; setChatMe
           <div className="max-w-4xl mx-auto space-y--12 space-y-4 grid grid-cols-1  ">
             {messagesData &&
               messagesData?.map((data, index) => {
-                console.log("messagesData:length ", messagesData.length - 1 === index);
                 return (
                   <React.Fragment key={index}>
                     {/* recepient message */}
@@ -225,19 +259,68 @@ const ChatView: NextPage<{ onDeleteChat: () => any; chatMetaData: any; setChatMe
                 );
               })}
           </div>
+          {/* find chat loading screen */}
+          <div className="h-[70vh] ">
+            {messagesData && messagesData.length === 0 && (
+              <div className="flex flex-col items-center justify-center">
+                {isFinding === false && Boolean(dynamicKey) === false && (
+                  <>
+                    <div>
+                      find new chat click on
+                      <button className="m-2 btn btn-accent btn-xs" onClick={onNewChat}>
+                        New
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {isFinding && Boolean(dynamicKey) === false && (
+                  <div>
+                    <div className="opacity-100 mt-44 animate-pulse">Hold on looking for a chat....</div>
+
+                    <div className="mt--44">{isFinding && <progress className="w-56 progress progress-primary" />}</div>
+                  </div>
+                )}
+
+                {Boolean(dynamicKey) === true && (
+                  <div className="mt-44">
+                    <div className="">Found a match with common interest !!</div>
+                    <div className="">Say,hi 👋 to stranger.. </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* MESSAGE INPUT  */}
         <div className="sticky bottom-0 z-50 w-[80%] ">
           <div className="form-control">
             <div className="input-group ">
+              {messagesData.length === 0 && Boolean(dynamicKey) === false && (
+                <>
+                  <button className="btn btn-accent  " onClick={onNewChat}>
+                    New
+                  </button>
+                </>
+              )}
+
+              {Boolean(dynamicKey) === true && (
+                <>
+                  <button className="btn btn-warning  " onClick={onNewChat}>
+                    End
+                  </button>
+                </>
+              )}
+
               <input
                 type="text"
-                placeholder="Type a message"
+                placeholder="Type a message (press enter to send)"
                 className="w-full input input-bordered rounded-l-md"
                 value={chatMessage}
                 onChange={(e): any => setChatMessage(e.target.value)}
                 onKeyDown={(e): any => e.key === "Enter" && onSendMessage()}
+                disabled={Boolean(dynamicKey) === false}
               />
               <button className="btn btn-primary  " onClick={onSendMessage}>
                 <TbSend scale={100} />

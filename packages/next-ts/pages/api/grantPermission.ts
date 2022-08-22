@@ -13,8 +13,8 @@ import Web3 from "web3";
 import account from "../../contracts/account.json";
 import { Vault__factory } from "../../contracts/contract-types";
 
-const UP_ADDRESS = "0x4c77290de4e93110678Ceb3F9B2d28f90C9d0f73";
-const VAULT_ADDRESS = "0x77FE74BB6C1f52eA43cF8a3e5cae04937Ebaac95";
+const UP_ADDRESS = "0xa7d9F8324Fb1796827cE840e71919F62829d3567";
+const VAULT_ADDRESS = "0xBad1e675daB50D104f046AB5551A1353A23a8d3a";
 const RPC_URL = "http://0.0.0.0:8545";
 
 // type Data = {
@@ -139,7 +139,7 @@ async function grantPersmission(address): Promise<boolean> {
 }
 
 // loading all contracts at first time
-void LoadContracts();
+// void LoadContracts();
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>): Promise<any> {
   await LoadContracts();
   const address = req.query.address;

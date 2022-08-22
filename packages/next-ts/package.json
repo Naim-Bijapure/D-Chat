@@ -22,6 +22,7 @@
     "@scaffold-eth/common": "*",
     "@tailwindcss/forms": "^0.5.2",
     "@tailwindcss/typography": "^0.5.2",
+    "axios": "^0.27.2",
     "daisyui": "^2.15.2",
     "debug-eth-contract": "^0.0.4",
     "eth-hooks": "^4.2.21",
@@ -42,6 +43,8 @@
     "react-toastify": "^9.0.4",
     "remove": "^0.1.5",
     "sass": "^1.52.2",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1",
     "vercel": "^25.1.0",
     "wagmi": "^0.6.0",
     "web3": "^1.7.5"
