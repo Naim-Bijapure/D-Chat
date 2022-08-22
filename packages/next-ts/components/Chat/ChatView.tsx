@@ -197,7 +197,7 @@ const ChatView: NextPage<{ onDeleteChat: () => any; chatMetaData: any; setChatMe
       <div className="flex flex-col items-start justify-center h-[100%] ">
         {/* <div className=""> */}
         {/* chat messages */}
-        <div className="p-2 overflow-y-scroll bg-gray-100 p--8 w-[80%]">
+        <div className="p-2 overflow-y-scroll bg-gray-100 p--8 w-[80%] h--[300px]">
           <div className="max-w-4xl mx-auto space-y--12 space-y-4 grid grid-cols-1  ">
             {messagesData &&
               messagesData?.map((data, index) => {

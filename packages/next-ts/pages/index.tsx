@@ -83,12 +83,12 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <main className="flex items-start justify-around h-[100%]">
+      <main className="flex items-start justify-around h-[100%] ">
         {/* on active chat */}
 
-        <button className="btn btn-primary" onClick={onTest}>
+        {/* <button className="btn btn-primary" onClick={onTest}>
           Test
-        </button>
+        </button> */}
 
         {chatMetaData && chatMetaData["activeChat"] === true && (
           <div className="w-[100%]">
