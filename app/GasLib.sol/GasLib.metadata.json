@@ -1,0 +1,58 @@
+{
+  "compiler": {
+    "version": "0.8.15+commit.e14f2714"
+  },
+  "language": "Solidity",
+  "output": {
+    "abi": [],
+    "devdoc": {
+      "details": "Library to add all efficient functions that could get repeated.",
+      "kind": "dev",
+      "methods": {},
+      "version": 1
+    },
+    "userdoc": {
+      "kind": "user",
+      "methods": {},
+      "version": 1
+    }
+  },
+  "settings": {
+    "compilationTarget": {
+      "packages/foundry-ts/lib/ERC725/implementations/contracts/utils/GasLib.sol": "GasLib"
+    },
+    "evmVersion": "london",
+    "libraries": {},
+    "metadata": {
+      "bytecodeHash": "ipfs"
+    },
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "remappings": [
+      ":@erc725/smart-contracts/contracts/=packages/foundry-ts/lib/ERC725/implementations/contracts/",
+      ":@lukso/lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/",
+      ":@openzeppelin/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":ERC725/=packages/foundry-ts/lib/ERC725/",
+      ":ds-test/=packages/foundry-ts/lib/solmate/lib/ds-test/src/",
+      ":forge-std/=packages/foundry-ts/lib/forge-std/src/",
+      ":lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/contracts/",
+      ":openzeppelin-contracts/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":solidity-bytes-utils/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solidity-bytes-utils/contracts/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solmate/=packages/foundry-ts/lib/solmate/src/"
+    ]
+  },
+  "sources": {
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/utils/GasLib.sol": {
+      "keccak256": "0xe14b9134f285d02fcf967caaa6a0566c8e9e8197a9ed190021e310bd4b7fc6c7",
+      "license": "Apache-2.0",
+      "urls": [
+        "bzz-raw://9b3439b3f97b78b1c167de8c930ce355790d6abdc4a73403f8dcdda44939454a",
+        "dweb:/ipfs/Qmd57sRWDQGsYe2VU3mpbPMYrbiS1ZJWSPAUVQyodE44xN"
+      ]
+    }
+  },
+  "version": 1
+}

@@ -73,5 +73,8 @@
       "yarn workspace @scaffold-eth/foundry-ts lint --fix",
       "yarn workspace @scaffold-eth/foundry-ts format"
     ]
+  },
+  "dependencies": {
+    "@typechain/ethers-v5": "^10.1.0"
   }
 }

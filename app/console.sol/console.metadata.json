@@ -1,0 +1,57 @@
+{
+  "compiler": {
+    "version": "0.8.15+commit.e14f2714"
+  },
+  "language": "Solidity",
+  "output": {
+    "abi": [],
+    "devdoc": {
+      "kind": "dev",
+      "methods": {},
+      "version": 1
+    },
+    "userdoc": {
+      "kind": "user",
+      "methods": {},
+      "version": 1
+    }
+  },
+  "settings": {
+    "compilationTarget": {
+      "packages/foundry-ts/lib/forge-std/src/console.sol": "console"
+    },
+    "evmVersion": "london",
+    "libraries": {},
+    "metadata": {
+      "bytecodeHash": "ipfs"
+    },
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "remappings": [
+      ":@erc725/smart-contracts/contracts/=packages/foundry-ts/lib/ERC725/implementations/contracts/",
+      ":@lukso/lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/",
+      ":@openzeppelin/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":ERC725/=packages/foundry-ts/lib/ERC725/",
+      ":ds-test/=packages/foundry-ts/lib/solmate/lib/ds-test/src/",
+      ":forge-std/=packages/foundry-ts/lib/forge-std/src/",
+      ":lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/contracts/",
+      ":openzeppelin-contracts/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":solidity-bytes-utils/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solidity-bytes-utils/contracts/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solmate/=packages/foundry-ts/lib/solmate/src/"
+    ]
+  },
+  "sources": {
+    "packages/foundry-ts/lib/forge-std/src/console.sol": {
+      "keccak256": "0x91d5413c2434ca58fd278b6e1e79fd98d10c83931cc2596a6038eee4daeb34ba",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://91ccea707361e48b9b7a161fe81f496b9932bc471e9c4e4e1e9c283f2453cc70",
+        "dweb:/ipfs/QmcB66sZhQ6Kz7MUHcLE78YXRUZxoZnnxZjN6yATsbB2ec"
+      ]
+    }
+  },
+  "version": 1
+}

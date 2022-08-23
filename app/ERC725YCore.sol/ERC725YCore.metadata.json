@@ -1,0 +1,329 @@
+{
+  "compiler": {
+    "version": "0.8.15+commit.e14f2714"
+  },
+  "language": "Solidity",
+  "output": {
+    "abi": [
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "bytes32",
+            "name": "dataKey",
+            "type": "bytes32"
+          }
+        ],
+        "name": "DataChanged",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "previousOwner",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32[]",
+            "name": "dataKeys",
+            "type": "bytes32[]"
+          }
+        ],
+        "name": "getData",
+        "outputs": [
+          {
+            "internalType": "bytes[]",
+            "name": "dataValues",
+            "type": "bytes[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32",
+            "name": "dataKey",
+            "type": "bytes32"
+          }
+        ],
+        "name": "getData",
+        "outputs": [
+          {
+            "internalType": "bytes",
+            "name": "dataValue",
+            "type": "bytes"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32[]",
+            "name": "dataKeys",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "dataValues",
+            "type": "bytes[]"
+          }
+        ],
+        "name": "setData",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32",
+            "name": "dataKey",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "dataValue",
+            "type": "bytes"
+          }
+        ],
+        "name": "setData",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes4",
+            "name": "interfaceId",
+            "type": "bytes4"
+          }
+        ],
+        "name": "supportsInterface",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }
+    ],
+    "devdoc": {
+      "author": "Fabian Vogelsteller <fabian@lukso.network>",
+      "details": "Contract module which provides the ability to set arbitrary data key/value pairs that can be changed over time It is intended to standardise certain data key/value pairs to allow automated read and writes from/to the contract storage",
+      "kind": "dev",
+      "methods": {
+        "getData(bytes32)": {
+          "params": {
+            "dataKey": "The key which value to retrieve"
+          },
+          "returns": {
+            "dataValue": "The data stored at the key"
+          }
+        },
+        "getData(bytes32[])": {
+          "params": {
+            "dataKeys": "The array of keys which values to retrieve"
+          },
+          "returns": {
+            "dataValues": "The array of data stored at multiple keys"
+          }
+        },
+        "owner()": {
+          "details": "Returns the address of the current owner."
+        },
+        "renounceOwnership()": {
+          "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+        },
+        "setData(bytes32,bytes)": {
+          "params": {
+            "dataKey": "The key to retrieve stored value",
+            "dataValue": "The value to set SHOULD only be callable by the owner of the contract set via ERC173 Emits a {DataChanged} event."
+          }
+        },
+        "setData(bytes32[],bytes[])": {
+          "details": "Sets array of data for multiple given `dataKeys` SHOULD only be callable by the owner of the contract set via ERC173 Emits a {DataChanged} event.",
+          "params": {
+            "dataKeys": "The array of data keys for values to set",
+            "dataValues": "The array of values to set"
+          }
+        },
+        "supportsInterface(bytes4)": {
+          "details": "See {IERC165-supportsInterface}."
+        },
+        "transferOwnership(address)": {
+          "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+        }
+      },
+      "stateVariables": {
+        "store": {
+          "details": "Map the dataKeys to their dataValues"
+        }
+      },
+      "title": "Core implementation of ERC725Y General data key/value store",
+      "version": 1
+    },
+    "userdoc": {
+      "events": {
+        "DataChanged(bytes32)": {
+          "notice": "Emitted when data at a key is changed"
+        }
+      },
+      "kind": "user",
+      "methods": {
+        "getData(bytes32)": {
+          "notice": "Gets singular data at a given `dataKey`"
+        },
+        "getData(bytes32[])": {
+          "notice": "Gets array of data for multiple given keys"
+        },
+        "setData(bytes32,bytes)": {
+          "notice": "Sets singular data for a given `dataKey`"
+        }
+      },
+      "version": 1
+    }
+  },
+  "settings": {
+    "compilationTarget": {
+      "packages/foundry-ts/lib/ERC725/implementations/contracts/ERC725YCore.sol": "ERC725YCore"
+    },
+    "evmVersion": "london",
+    "libraries": {},
+    "metadata": {
+      "bytecodeHash": "ipfs"
+    },
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "remappings": [
+      ":@erc725/smart-contracts/contracts/=packages/foundry-ts/lib/ERC725/implementations/contracts/",
+      ":@lukso/lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/",
+      ":@openzeppelin/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":ERC725/=packages/foundry-ts/lib/ERC725/",
+      ":ds-test/=packages/foundry-ts/lib/solmate/lib/ds-test/src/",
+      ":forge-std/=packages/foundry-ts/lib/forge-std/src/",
+      ":lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/contracts/",
+      ":openzeppelin-contracts/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":solidity-bytes-utils/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solidity-bytes-utils/contracts/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solmate/=packages/foundry-ts/lib/solmate/src/"
+    ]
+  },
+  "sources": {
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/ERC725YCore.sol": {
+      "keccak256": "0x4fa686a57bcfc6968ec827dbb655f03e4c8baa54c4b363bc2273ca8f4923bf36",
+      "license": "Apache-2.0",
+      "urls": [
+        "bzz-raw://7e8af014b6366782007f1722822c1591ce1582d39e57dd417ea1b2b39d64d071",
+        "dweb:/ipfs/QmVBev7FShFPrt9dW2Mgckjcfh4QwFRZzdG9pzNCpoJac3"
+      ]
+    },
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/constants.sol": {
+      "keccak256": "0xdf3d466e2d6f8d0f2e288ee01edb0cf7de2db9cac3c257b7d6a6284adf4b2480",
+      "license": "Apache-2.0",
+      "urls": [
+        "bzz-raw://16e4a90c8f2d245621808320ed6aa4ad7fcfd50b36df116e8447e5fc1700d7a9",
+        "dweb:/ipfs/QmT4E9cSMuwpiABbdKExNn3Ef9wmjdmv3E9MuwkmkDv6BY"
+      ]
+    },
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/custom/OwnableUnset.sol": {
+      "keccak256": "0xe77afcd7d2496c79578ff7f219c0fad901fa4e0421f9ba389eb5f5eb7d9f1dcf",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://bc4186cf3bffd2b00017463ead8dfdef4c09e47fa943788beec42c4b66253f9e",
+        "dweb:/ipfs/QmXvQwkdxHjUJzfs8P86JJbS3aqSgXhxKt4zYSkjW3hnqP"
+      ]
+    },
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/interfaces/IERC725Y.sol": {
+      "keccak256": "0x88a85aac90cb593ef4366d0ffbac4d05a06fa8b875727350ae91237f9192c4a2",
+      "license": "CC0-1.0",
+      "urls": [
+        "bzz-raw://c26ce947741db7ce5492d8a83f8594eb39915aaa645eb2954b37e583be863887",
+        "dweb:/ipfs/QmaafqqnTyY8XAt9Rt8k1G9xurkcMDFWWfxRMCYG38ZK1J"
+      ]
+    },
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/utils/GasLib.sol": {
+      "keccak256": "0xe14b9134f285d02fcf967caaa6a0566c8e9e8197a9ed190021e310bd4b7fc6c7",
+      "license": "Apache-2.0",
+      "urls": [
+        "bzz-raw://9b3439b3f97b78b1c167de8c930ce355790d6abdc4a73403f8dcdda44939454a",
+        "dweb:/ipfs/Qmd57sRWDQGsYe2VU3mpbPMYrbiS1ZJWSPAUVQyodE44xN"
+      ]
+    },
+    "packages/foundry-ts/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol": {
+      "keccak256": "0xd10975de010d89fd1c78dc5e8a9a7e7f496198085c151648f20cba166b32582b",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://fb0048dee081f6fffa5f74afc3fb328483c2a30504e94a0ddd2a5114d731ec4d",
+        "dweb:/ipfs/QmZptt1nmYoA5SgjwnSgWqgUSDgm4q52Yos3xhnMv3MV43"
+      ]
+    },
+    "packages/foundry-ts/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": {
+      "keccak256": "0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f",
+        "dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
+      ]
+    }
+  },
+  "version": 1
+}

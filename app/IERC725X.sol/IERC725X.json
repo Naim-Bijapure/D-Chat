@@ -1,0 +1,634 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "operation",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "contractAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "name": "ContractCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "operation",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes4",
+          "name": "selector",
+          "type": "bytes4"
+        }
+      ],
+      "name": "Executed",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "operationType",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "execute",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "execute(uint256,address,uint256,bytes)": "44c028fe",
+    "supportsInterface(bytes4)": "01ffc9a7"
+  },
+  "ast": {
+    "absolutePath": "packages/foundry-ts/lib/ERC725/implementations/contracts/interfaces/IERC725X.sol",
+    "id": 878,
+    "exportedSymbols": {
+      "IERC165": [
+        21238
+      ],
+      "IERC725X": [
+        877
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "36:2373:5",
+    "nodes": [
+      {
+        "id": 837,
+        "nodeType": "PragmaDirective",
+        "src": "36:23:5",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ]
+      },
+      {
+        "id": 839,
+        "nodeType": "ImportDirective",
+        "src": "75:80:5",
+        "absolutePath": "packages/foundry-ts/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol",
+        "file": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 878,
+        "sourceUnit": 21239,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 838,
+              "name": "IERC165",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 21238,
+              "src": "83:7:5",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 877,
+        "nodeType": "ContractDefinition",
+        "src": "544:1864:5",
+        "nodes": [
+          {
+            "id": 851,
+            "nodeType": "EventDefinition",
+            "src": "863:135:5",
+            "anonymous": false,
+            "documentation": {
+              "id": 843,
+              "nodeType": "StructuredDocumentation",
+              "src": "580:278:5",
+              "text": " @notice Emitted when a contract is created\n @param operation The operation used to create a contract\n @param contractAddress The created contract address\n @param value The amount of native tokens (in Wei) sent to the created contract address"
+            },
+            "eventSelector": "01c42bd7e97a66166063b02fce6924e6656b6c2c61966630165095c4fb0b7b2f",
+            "name": "ContractCreated",
+            "nameLocation": "869:15:5",
+            "parameters": {
+              "id": 850,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 845,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "operation",
+                  "nameLocation": "910:9:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 851,
+                  "src": "894:25:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 844,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "894:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 847,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "contractAddress",
+                  "nameLocation": "945:15:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 851,
+                  "src": "929:31:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 846,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "929:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 849,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "value",
+                  "nameLocation": "986:5:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 851,
+                  "src": "970:21:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 848,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "970:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "884:113:5"
+            }
+          },
+          {
+            "id": 862,
+            "nodeType": "EventDefinition",
+            "src": "1368:140:5",
+            "anonymous": false,
+            "documentation": {
+              "id": 852,
+              "nodeType": "StructuredDocumentation",
+              "src": "1004:359:5",
+              "text": " @notice Emitted when a contract executed.\n @param operation The operation used to execute a contract\n @param to The address where the call is executed\n @param value The amount of native tokens transferred with the call (in Wei).\n @param selector The first 4 bytes (= function selector) of the data sent with the call"
+            },
+            "eventSelector": "4810874456b8e6487bd861375cf6abd8e1c8bb5858c8ce36a86a04dabfac199e",
+            "name": "Executed",
+            "nameLocation": "1374:8:5",
+            "parameters": {
+              "id": 861,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 854,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "operation",
+                  "nameLocation": "1408:9:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 862,
+                  "src": "1392:25:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 853,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1392:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 856,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "to",
+                  "nameLocation": "1443:2:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 862,
+                  "src": "1427:18:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 855,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1427:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 858,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "value",
+                  "nameLocation": "1471:5:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 862,
+                  "src": "1455:21:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 857,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1455:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 860,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "selector",
+                  "nameLocation": "1493:8:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 862,
+                  "src": "1486:15:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes4",
+                    "typeString": "bytes4"
+                  },
+                  "typeName": {
+                    "id": 859,
+                    "name": "bytes4",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1486:6:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes4",
+                      "typeString": "bytes4"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1382:125:5"
+            }
+          },
+          {
+            "id": 876,
+            "nodeType": "FunctionDefinition",
+            "src": "2240:166:5",
+            "documentation": {
+              "id": 863,
+              "nodeType": "StructuredDocumentation",
+              "src": "1514:721:5",
+              "text": " @param operationType The operation to execute: CALL = 0 CREATE = 1 CREATE2 = 2 STATICCALL = 3 DELEGATECALL = 4\n @param to The smart contract or address to interact with, `to` will be unused if a contract is created (operation 1 and 2)\n @param value The amount of native tokens to transfer (in Wei).\n @param data The call data, or the bytecode of the contract to deploy\n @dev Executes any other smart contract.\n SHOULD only be callable by the owner of the contract set via ERC173\n Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4\n Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2"
+            },
+            "functionSelector": "44c028fe",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "execute",
+            "nameLocation": "2249:7:5",
+            "parameters": {
+              "id": 872,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 865,
+                  "mutability": "mutable",
+                  "name": "operationType",
+                  "nameLocation": "2274:13:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 876,
+                  "src": "2266:21:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 864,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2266:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 867,
+                  "mutability": "mutable",
+                  "name": "to",
+                  "nameLocation": "2305:2:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 876,
+                  "src": "2297:10:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 866,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2297:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 869,
+                  "mutability": "mutable",
+                  "name": "value",
+                  "nameLocation": "2325:5:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 876,
+                  "src": "2317:13:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 868,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2317:7:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 871,
+                  "mutability": "mutable",
+                  "name": "data",
+                  "nameLocation": "2355:4:5",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 876,
+                  "src": "2340:19:5",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 870,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2340:5:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2256:109:5"
+            },
+            "returnParameters": {
+              "id": 875,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 874,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 876,
+                  "src": "2392:12:5",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 873,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2392:5:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2391:14:5"
+            },
+            "scope": 877,
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [
+          {
+            "baseName": {
+              "id": 841,
+              "name": "IERC165",
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 21238,
+              "src": "566:7:5"
+            },
+            "id": 842,
+            "nodeType": "InheritanceSpecifier",
+            "src": "566:7:5"
+          }
+        ],
+        "canonicalName": "IERC725X",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 840,
+          "nodeType": "StructuredDocumentation",
+          "src": "157:386:5",
+          "text": " @title The interface for ERC725X General executor\n @dev ERC725X provides the ability to call arbitrary functions at any other smart contract and itself,\n including using `delegatecall`, `staticcall`, as well as creating contracts using `create` and `create2`\n This is the basis for a smart contract based account system, but could also be used as a proxy account system"
+        },
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          877,
+          21238
+        ],
+        "name": "IERC725X",
+        "nameLocation": "554:8:5",
+        "scope": 878,
+        "usedErrors": []
+      }
+    ],
+    "license": "CC0-1.0"
+  },
+  "id": 5
+}

@@ -1,0 +1,665 @@
+{
+  "compiler": {
+    "version": "0.8.15+commit.e14f2714"
+  },
+  "language": "Solidity",
+  "output": {
+    "abi": [
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "operation",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          }
+        ],
+        "name": "ContractCreated",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "bytes32",
+            "name": "dataKey",
+            "type": "bytes32"
+          }
+        ],
+        "name": "DataChanged",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "operation",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "bytes4",
+            "name": "selector",
+            "type": "bytes4"
+          }
+        ],
+        "name": "Executed",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "previousOwner",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "bytes32",
+            "name": "typeId",
+            "type": "bytes32"
+          },
+          {
+            "indexed": true,
+            "internalType": "bytes",
+            "name": "returnedValue",
+            "type": "bytes"
+          },
+          {
+            "indexed": false,
+            "internalType": "bytes",
+            "name": "receivedData",
+            "type": "bytes"
+          }
+        ],
+        "name": "UniversalReceiver",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "sender",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          }
+        ],
+        "name": "ValueReceived",
+        "type": "event"
+      },
+      {
+        "stateMutability": "payable",
+        "type": "fallback"
+      },
+      {
+        "inputs": [],
+        "name": "claimOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "operation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "name": "execute",
+        "outputs": [
+          {
+            "internalType": "bytes",
+            "name": "result",
+            "type": "bytes"
+          }
+        ],
+        "stateMutability": "payable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32[]",
+            "name": "dataKeys",
+            "type": "bytes32[]"
+          }
+        ],
+        "name": "getData",
+        "outputs": [
+          {
+            "internalType": "bytes[]",
+            "name": "dataValues",
+            "type": "bytes[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32",
+            "name": "dataKey",
+            "type": "bytes32"
+          }
+        ],
+        "name": "getData",
+        "outputs": [
+          {
+            "internalType": "bytes",
+            "name": "dataValue",
+            "type": "bytes"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "pendingOwner",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32[]",
+            "name": "dataKeys",
+            "type": "bytes32[]"
+          },
+          {
+            "internalType": "bytes[]",
+            "name": "dataValues",
+            "type": "bytes[]"
+          }
+        ],
+        "name": "setData",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32",
+            "name": "dataKey",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "dataValue",
+            "type": "bytes"
+          }
+        ],
+        "name": "setData",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes4",
+            "name": "interfaceId",
+            "type": "bytes4"
+          }
+        ],
+        "name": "supportsInterface",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes32",
+            "name": "typeId",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "name": "universalReceiver",
+        "outputs": [
+          {
+            "internalType": "bytes",
+            "name": "returnValue",
+            "type": "bytes"
+          }
+        ],
+        "stateMutability": "payable",
+        "type": "function"
+      }
+    ],
+    "devdoc": {
+      "author": "Fabian Vogelsteller, Yamen Merhi, Jean Cavallera",
+      "details": "Could be owned by a UniversalProfile and able to register received asset with UniversalReceiverDelegateVault",
+      "events": {
+        "ValueReceived(address,uint256)": {
+          "params": {
+            "sender": "The address of the sender",
+            "value": "The amount of value sent"
+          }
+        }
+      },
+      "kind": "dev",
+      "methods": {
+        "claimOwnership()": {
+          "details": "Transfer the ownership and notify the vault sender and vault receiver"
+        },
+        "execute(uint256,address,uint256,bytes)": {
+          "details": "Executes any other smart contract. SHOULD only be callable by the owner of the contract set via ERC173 Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4 Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2",
+          "params": {
+            "data": "The call data, or the bytecode of the contract to deploy",
+            "operationType": "The operation to execute: CALL = 0 CREATE = 1 CREATE2 = 2 STATICCALL = 3 DELEGATECALL = 4",
+            "to": "The smart contract or address to interact with, `to` will be unused if a contract is created (operation 1 and 2)",
+            "value": "The amount of native tokens to transfer (in Wei)."
+          }
+        },
+        "getData(bytes32)": {
+          "params": {
+            "dataKey": "The key which value to retrieve"
+          },
+          "returns": {
+            "dataValue": "The data stored at the key"
+          }
+        },
+        "getData(bytes32[])": {
+          "params": {
+            "dataKeys": "The array of keys which values to retrieve"
+          },
+          "returns": {
+            "dataValues": "The array of data stored at multiple keys"
+          }
+        },
+        "owner()": {
+          "details": "Returns the address of the current owner."
+        },
+        "renounceOwnership()": {
+          "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+        },
+        "setData(bytes32,bytes)": {
+          "details": "Sets data as bytes in the vault storage for a single key. SHOULD only be callable by the owner of the contract set via ERC173 and the UniversalReceiverDelegate Emits a {DataChanged} event.",
+          "params": {
+            "dataKey": "The key to retrieve stored value",
+            "dataValue": "The value to set SHOULD only be callable by the owner of the contract set via ERC173 Emits a {DataChanged} event."
+          }
+        },
+        "setData(bytes32[],bytes[])": {
+          "details": "Sets array of data at multiple given `key` SHOULD only be callable by the owner of the contract set via ERC173 and the UniversalReceiverDelegate Emits a {DataChanged} event.",
+          "params": {
+            "dataKeys": "The array of data keys for values to set",
+            "dataValues": "The array of values to set"
+          }
+        },
+        "supportsInterface(bytes4)": {
+          "details": "See {IERC165-supportsInterface}."
+        },
+        "transferOwnership(address)": {
+          "details": "Sets the pending owner"
+        },
+        "universalReceiver(bytes32,bytes)": {
+          "details": "Forwards the call to the UniversalReceiverDelegate if set.",
+          "params": {
+            "data": "The data received.",
+            "typeId": "The type of call received."
+          }
+        }
+      },
+      "title": "Core Implementation of LSP9Vault built on top of ERC725, LSP1UniversalReceiver",
+      "version": 1
+    },
+    "userdoc": {
+      "events": {
+        "ContractCreated(uint256,address,uint256)": {
+          "notice": "Emitted when a contract is created"
+        },
+        "DataChanged(bytes32)": {
+          "notice": "Emitted when data at a key is changed"
+        },
+        "Executed(uint256,address,uint256,bytes4)": {
+          "notice": "Emitted when a contract executed."
+        },
+        "UniversalReceiver(address,uint256,bytes32,bytes,bytes)": {
+          "notice": "Emitted when the universalReceiver function is succesfully executed"
+        },
+        "ValueReceived(address,uint256)": {
+          "notice": "Emitted when receiving native tokens"
+        }
+      },
+      "kind": "user",
+      "methods": {
+        "getData(bytes32)": {
+          "notice": "Gets singular data at a given `dataKey`"
+        },
+        "getData(bytes32[])": {
+          "notice": "Gets array of data for multiple given keys"
+        },
+        "setData(bytes32,bytes)": {
+          "notice": "Sets singular data for a given `dataKey`"
+        },
+        "universalReceiver(bytes32,bytes)": {
+          "notice": "Triggers the UniversalReceiver event when this function gets executed successfully."
+        }
+      },
+      "version": 1
+    }
+  },
+  "settings": {
+    "compilationTarget": {
+      "packages/foundry-ts/lib/lsp-smart-contracts/contracts/LSP9Vault/LSP9VaultCore.sol": "LSP9VaultCore"
+    },
+    "evmVersion": "london",
+    "libraries": {},
+    "metadata": {
+      "bytecodeHash": "ipfs"
+    },
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "remappings": [
+      ":@erc725/smart-contracts/contracts/=packages/foundry-ts/lib/ERC725/implementations/contracts/",
+      ":@lukso/lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/",
+      ":@openzeppelin/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":ERC725/=packages/foundry-ts/lib/ERC725/",
+      ":ds-test/=packages/foundry-ts/lib/solmate/lib/ds-test/src/",
+      ":forge-std/=packages/foundry-ts/lib/forge-std/src/",
+      ":lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/contracts/",
+      ":openzeppelin-contracts/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":solidity-bytes-utils/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solidity-bytes-utils/contracts/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solmate/=packages/foundry-ts/lib/solmate/src/"
+    ]
+  },
+  "sources": {
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/ERC725XCore.sol": {
+      "keccak256": "0x2aaf7cb46208ff81de78c7c573309ee642610a6e038c82ff1b0e33afa2dc8943",
+      "license": "Apache-2.0",
+      "urls": [
+        "bzz-raw://1b4ada1f1ff666dd21f554e3cc5470bbee5de648b7c7a68051bf47be370cfbf4",
+        "dweb:/ipfs/QmNVsfVSM9TmUVgSeHAWsZmJdDCT8KyfnLFD61oumA2ENT"
+      ]
+    },
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/ERC725YCore.sol": {
+      "keccak256": "0x4fa686a57bcfc6968ec827dbb655f03e4c8baa54c4b363bc2273ca8f4923bf36",
+      "license": "Apache-2.0",
+      "urls": [
+        "bzz-raw://7e8af014b6366782007f1722822c1591ce1582d39e57dd417ea1b2b39d64d071",
+        "dweb:/ipfs/QmVBev7FShFPrt9dW2Mgckjcfh4QwFRZzdG9pzNCpoJac3"
+      ]
+    },
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/constants.sol": {
+      "keccak256": "0xdf3d466e2d6f8d0f2e288ee01edb0cf7de2db9cac3c257b7d6a6284adf4b2480",
+      "license": "Apache-2.0",
+      "urls": [
+        "bzz-raw://16e4a90c8f2d245621808320ed6aa4ad7fcfd50b36df116e8447e5fc1700d7a9",
+        "dweb:/ipfs/QmT4E9cSMuwpiABbdKExNn3Ef9wmjdmv3E9MuwkmkDv6BY"
+      ]
+    },
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/custom/OwnableUnset.sol": {
+      "keccak256": "0xe77afcd7d2496c79578ff7f219c0fad901fa4e0421f9ba389eb5f5eb7d9f1dcf",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://bc4186cf3bffd2b00017463ead8dfdef4c09e47fa943788beec42c4b66253f9e",
+        "dweb:/ipfs/QmXvQwkdxHjUJzfs8P86JJbS3aqSgXhxKt4zYSkjW3hnqP"
+      ]
+    },
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/interfaces/IERC725X.sol": {
+      "keccak256": "0xa2e2c7401e7443955ca766eb0cea55c476af0ad1fd8a311e6b2e2b3d51f64132",
+      "license": "CC0-1.0",
+      "urls": [
+        "bzz-raw://27d53e130e7afb0933aa94f3a30ff0595e22ee8c76a52bf6fd743c1268e5bb89",
+        "dweb:/ipfs/QmS9EySBRM84T11VekkdJvqgFV7sf4HofPz7LLmPmLbsZC"
+      ]
+    },
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/interfaces/IERC725Y.sol": {
+      "keccak256": "0x88a85aac90cb593ef4366d0ffbac4d05a06fa8b875727350ae91237f9192c4a2",
+      "license": "CC0-1.0",
+      "urls": [
+        "bzz-raw://c26ce947741db7ce5492d8a83f8594eb39915aaa645eb2954b37e583be863887",
+        "dweb:/ipfs/QmaafqqnTyY8XAt9Rt8k1G9xurkcMDFWWfxRMCYG38ZK1J"
+      ]
+    },
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/utils/GasLib.sol": {
+      "keccak256": "0xe14b9134f285d02fcf967caaa6a0566c8e9e8197a9ed190021e310bd4b7fc6c7",
+      "license": "Apache-2.0",
+      "urls": [
+        "bzz-raw://9b3439b3f97b78b1c167de8c930ce355790d6abdc4a73403f8dcdda44939454a",
+        "dweb:/ipfs/Qmd57sRWDQGsYe2VU3mpbPMYrbiS1ZJWSPAUVQyodE44xN"
+      ]
+    },
+    "packages/foundry-ts/lib/lsp-smart-contracts/contracts/Custom/ClaimOwnership.sol": {
+      "keccak256": "0xfb97120ad140ba1e2b5d2aa918c60007af311027fd416f31d0605ad1e3c6d207",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://e344a679f7396bd3ae2fe7918fdc4015a7f8772b44251904897cb7a6d2d02434",
+        "dweb:/ipfs/QmVY8evHBqpcWx5d9rC7wwkfQJv97vWBSKExfRY32mrKLg"
+      ]
+    },
+    "packages/foundry-ts/lib/lsp-smart-contracts/contracts/Custom/ERC165Checker.sol": {
+      "keccak256": "0x1d46163bb4587267ff53d597766d408225834e0c7074bf2c322697aa8166f6ae",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://95516fbdf69274ede04c497986dac0a2f6eda338457982d42975b07171aaf865",
+        "dweb:/ipfs/QmSkxJRV3GC9tDpEV7SULXXVdrXCKhheGi9XaUK4RsHQzu"
+      ]
+    },
+    "packages/foundry-ts/lib/lsp-smart-contracts/contracts/Custom/IClaimOwnership.sol": {
+      "keccak256": "0xf4d12cece4c1fe3b97144a53bc1afcd7fd6a9ff2c98bf8bd877ffaf60f02fbdf",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://65469ea01d6ea2822ef00643e8b6c3538bf5d718c50525669b837a6fe77b7dca",
+        "dweb:/ipfs/QmXzg3YrFsezzhFmCnsPy9z685HfjZp4QczoDrJ7nVW2he"
+      ]
+    },
+    "packages/foundry-ts/lib/lsp-smart-contracts/contracts/LSP1UniversalReceiver/ILSP1UniversalReceiver.sol": {
+      "keccak256": "0xbca7d0f76e439ee3302096f8ecaf8a506434a83c86639c95efd79e6b89d364ae",
+      "license": "CC0-1.0",
+      "urls": [
+        "bzz-raw://c4e3931e406a2e0c69bd5a7c5a677541a36dcdda01682e46bf7180bc814495a7",
+        "dweb:/ipfs/QmWRZZ2XerqFttSpcCv27Fk4bTzHAVaKHFxCLYGFmYj1uK"
+      ]
+    },
+    "packages/foundry-ts/lib/lsp-smart-contracts/contracts/LSP1UniversalReceiver/ILSP1UniversalReceiverDelegate.sol": {
+      "keccak256": "0x91cfa8fec33a3d7f4141c1188fd3d2bd167db9e8420e9b9ed07c3e1f7b8a239b",
+      "license": "CC0-1.0",
+      "urls": [
+        "bzz-raw://fd707b91f940a35052503056548ec30ab141cc16d73bd8355c6cb608f203d991",
+        "dweb:/ipfs/QmXPUNVJLYMBYW4SzMzpG7MoLzAYupQK9R5yqQQ9gtzC9B"
+      ]
+    },
+    "packages/foundry-ts/lib/lsp-smart-contracts/contracts/LSP1UniversalReceiver/LSP1Constants.sol": {
+      "keccak256": "0x37255dac370701b20dc046c41024686ccf5a88eb1e68415c30167015f6f80f17",
+      "license": "Apache-2.0",
+      "urls": [
+        "bzz-raw://fdfe8b6cd1deddcf3d3110f54b6a8bb9a73412c4f8cc40369027e82fe55322e1",
+        "dweb:/ipfs/QmdwssJrfuT3nrub7M5fr8ZwT8WeAytbx8z2K9rwgjVnv4"
+      ]
+    },
+    "packages/foundry-ts/lib/lsp-smart-contracts/contracts/LSP9Vault/LSP9Constants.sol": {
+      "keccak256": "0xcc31d2cc359cb4cd91ebf528a6d5ed15985d017881d486abfd92c321c50e6dc9",
+      "license": "CC0-1.0",
+      "urls": [
+        "bzz-raw://dec25b887881b7ff198abaa7c8be7f32fcf3f3137b5b01a97ced100199ca023d",
+        "dweb:/ipfs/QmQ5zZRePnKQwVnqhkLpkA7aCZ1Rsi6HaycGoa68buYd3X"
+      ]
+    },
+    "packages/foundry-ts/lib/lsp-smart-contracts/contracts/LSP9Vault/LSP9VaultCore.sol": {
+      "keccak256": "0x7304f7bc86efa7d50191f785f5e88a9b239683ef853228af94f685f523a8528f",
+      "license": "Apache-2.0",
+      "urls": [
+        "bzz-raw://19717de52bb3d433ecd29df58bad4d2041e1e94a5ec660b6515673d7216f2a15",
+        "dweb:/ipfs/QmU8HK3SdALJiyhe9eJKBJejSQEzQ3Z2WHHZbxitsCygWQ"
+      ]
+    },
+    "packages/foundry-ts/lib/openzeppelin-contracts/contracts/utils/Address.sol": {
+      "keccak256": "0xa708703e3d62e8bb7c31d28c238e756ebcc12b9af57e6fa941cf9adc1daba8ae",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://78110f6e83d8210e27221d3be77d31c4468d40435dd2a9986dff92829ab8f3e3",
+        "dweb:/ipfs/QmXEsx612M31QmNzVc7X7Qcrpeug81ykfERhdsjxakntGA"
+      ]
+    },
+    "packages/foundry-ts/lib/openzeppelin-contracts/contracts/utils/Create2.sol": {
+      "keccak256": "0xc756688db2786cc325e5adafd1b3cdd75d10823cef9d344a1502e77ac79e5116",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://2ec3cc020e6cc7554ec73502bbce3ab2fb8c4b493bee4b0832a71f52eb997924",
+        "dweb:/ipfs/Qmd6MYSGpUpatptv9jPhyDhrbhjPC4wftUScTQaE8MVx1L"
+      ]
+    },
+    "packages/foundry-ts/lib/openzeppelin-contracts/contracts/utils/introspection/ERC165.sol": {
+      "keccak256": "0xd10975de010d89fd1c78dc5e8a9a7e7f496198085c151648f20cba166b32582b",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://fb0048dee081f6fffa5f74afc3fb328483c2a30504e94a0ddd2a5114d731ec4d",
+        "dweb:/ipfs/QmZptt1nmYoA5SgjwnSgWqgUSDgm4q52Yos3xhnMv3MV43"
+      ]
+    },
+    "packages/foundry-ts/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": {
+      "keccak256": "0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f",
+        "dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
+      ]
+    },
+    "packages/foundry-ts/lib/solidity-bytes-utils/contracts/BytesLib.sol": {
+      "keccak256": "0xf75784dfc94ea43668eb195d5690a1dde1b6eda62017e73a3899721583821d29",
+      "license": "Unlicense",
+      "urls": [
+        "bzz-raw://ca16cef8b94f3ac75d376489a668618f6c4595a906b939d674a883f4bf426014",
+        "dweb:/ipfs/QmceGU7qhyFLSejaj6i4dEtMzXDCSF3aYDtW1UeKjXQaRn"
+      ]
+    }
+  },
+  "version": 1
+}

@@ -1,0 +1,66 @@
+{
+  "compiler": {
+    "version": "0.8.15+commit.e14f2714"
+  },
+  "language": "Solidity",
+  "output": {
+    "abi": [],
+    "devdoc": {
+      "details": "Library used to query support of an interface declared via {IERC165}. Note that these functions return the actual result of the query: they do not `revert` if an interface is not supported. It is up to the caller to decide what to do in these cases.",
+      "kind": "dev",
+      "methods": {},
+      "version": 1
+    },
+    "userdoc": {
+      "kind": "user",
+      "methods": {},
+      "version": 1
+    }
+  },
+  "settings": {
+    "compilationTarget": {
+      "packages/foundry-ts/lib/lsp-smart-contracts/contracts/Custom/ERC165Checker.sol": "ERC165Checker"
+    },
+    "evmVersion": "london",
+    "libraries": {},
+    "metadata": {
+      "bytecodeHash": "ipfs"
+    },
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "remappings": [
+      ":@erc725/smart-contracts/contracts/=packages/foundry-ts/lib/ERC725/implementations/contracts/",
+      ":@lukso/lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/",
+      ":@openzeppelin/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":ERC725/=packages/foundry-ts/lib/ERC725/",
+      ":ds-test/=packages/foundry-ts/lib/solmate/lib/ds-test/src/",
+      ":forge-std/=packages/foundry-ts/lib/forge-std/src/",
+      ":lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/contracts/",
+      ":openzeppelin-contracts/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":solidity-bytes-utils/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solidity-bytes-utils/contracts/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solmate/=packages/foundry-ts/lib/solmate/src/"
+    ]
+  },
+  "sources": {
+    "packages/foundry-ts/lib/lsp-smart-contracts/contracts/Custom/ERC165Checker.sol": {
+      "keccak256": "0x1d46163bb4587267ff53d597766d408225834e0c7074bf2c322697aa8166f6ae",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://95516fbdf69274ede04c497986dac0a2f6eda338457982d42975b07171aaf865",
+        "dweb:/ipfs/QmSkxJRV3GC9tDpEV7SULXXVdrXCKhheGi9XaUK4RsHQzu"
+      ]
+    },
+    "packages/foundry-ts/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": {
+      "keccak256": "0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f",
+        "dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
+      ]
+    }
+  },
+  "version": 1
+}

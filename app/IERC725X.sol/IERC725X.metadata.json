@@ -1,0 +1,215 @@
+{
+  "compiler": {
+    "version": "0.8.15+commit.e14f2714"
+  },
+  "language": "Solidity",
+  "output": {
+    "abi": [
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "operation",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "contractAddress",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          }
+        ],
+        "name": "ContractCreated",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "operation",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "bytes4",
+            "name": "selector",
+            "type": "bytes4"
+          }
+        ],
+        "name": "Executed",
+        "type": "event"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "operationType",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "value",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "name": "execute",
+        "outputs": [
+          {
+            "internalType": "bytes",
+            "name": "",
+            "type": "bytes"
+          }
+        ],
+        "stateMutability": "payable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "bytes4",
+            "name": "interfaceId",
+            "type": "bytes4"
+          }
+        ],
+        "name": "supportsInterface",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      }
+    ],
+    "devdoc": {
+      "details": "ERC725X provides the ability to call arbitrary functions at any other smart contract and itself, including using `delegatecall`, `staticcall`, as well as creating contracts using `create` and `create2` This is the basis for a smart contract based account system, but could also be used as a proxy account system",
+      "events": {
+        "ContractCreated(uint256,address,uint256)": {
+          "params": {
+            "contractAddress": "The created contract address",
+            "operation": "The operation used to create a contract",
+            "value": "The amount of native tokens (in Wei) sent to the created contract address"
+          }
+        },
+        "Executed(uint256,address,uint256,bytes4)": {
+          "params": {
+            "operation": "The operation used to execute a contract",
+            "selector": "The first 4 bytes (= function selector) of the data sent with the call",
+            "to": "The address where the call is executed",
+            "value": "The amount of native tokens transferred with the call (in Wei)."
+          }
+        }
+      },
+      "kind": "dev",
+      "methods": {
+        "execute(uint256,address,uint256,bytes)": {
+          "details": "Executes any other smart contract. SHOULD only be callable by the owner of the contract set via ERC173 Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4 Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2",
+          "params": {
+            "data": "The call data, or the bytecode of the contract to deploy",
+            "operationType": "The operation to execute: CALL = 0 CREATE = 1 CREATE2 = 2 STATICCALL = 3 DELEGATECALL = 4",
+            "to": "The smart contract or address to interact with, `to` will be unused if a contract is created (operation 1 and 2)",
+            "value": "The amount of native tokens to transfer (in Wei)."
+          }
+        },
+        "supportsInterface(bytes4)": {
+          "details": "Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas."
+        }
+      },
+      "title": "The interface for ERC725X General executor",
+      "version": 1
+    },
+    "userdoc": {
+      "events": {
+        "ContractCreated(uint256,address,uint256)": {
+          "notice": "Emitted when a contract is created"
+        },
+        "Executed(uint256,address,uint256,bytes4)": {
+          "notice": "Emitted when a contract executed."
+        }
+      },
+      "kind": "user",
+      "methods": {},
+      "version": 1
+    }
+  },
+  "settings": {
+    "compilationTarget": {
+      "packages/foundry-ts/lib/ERC725/implementations/contracts/interfaces/IERC725X.sol": "IERC725X"
+    },
+    "evmVersion": "london",
+    "libraries": {},
+    "metadata": {
+      "bytecodeHash": "ipfs"
+    },
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "remappings": [
+      ":@erc725/smart-contracts/contracts/=packages/foundry-ts/lib/ERC725/implementations/contracts/",
+      ":@lukso/lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/",
+      ":@openzeppelin/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":ERC725/=packages/foundry-ts/lib/ERC725/",
+      ":ds-test/=packages/foundry-ts/lib/solmate/lib/ds-test/src/",
+      ":forge-std/=packages/foundry-ts/lib/forge-std/src/",
+      ":lsp-smart-contracts/=packages/foundry-ts/lib/lsp-smart-contracts/contracts/",
+      ":openzeppelin-contracts/=packages/foundry-ts/lib/openzeppelin-contracts/",
+      ":solidity-bytes-utils/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solidity-bytes-utils/contracts/=packages/foundry-ts/lib/solidity-bytes-utils/contracts/",
+      ":solmate/=packages/foundry-ts/lib/solmate/src/"
+    ]
+  },
+  "sources": {
+    "packages/foundry-ts/lib/ERC725/implementations/contracts/interfaces/IERC725X.sol": {
+      "keccak256": "0xa2e2c7401e7443955ca766eb0cea55c476af0ad1fd8a311e6b2e2b3d51f64132",
+      "license": "CC0-1.0",
+      "urls": [
+        "bzz-raw://27d53e130e7afb0933aa94f3a30ff0595e22ee8c76a52bf6fd743c1268e5bb89",
+        "dweb:/ipfs/QmS9EySBRM84T11VekkdJvqgFV7sf4HofPz7LLmPmLbsZC"
+      ]
+    },
+    "packages/foundry-ts/lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": {
+      "keccak256": "0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1",
+      "license": "MIT",
+      "urls": [
+        "bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f",
+        "dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
+      ]
+    }
+  },
+  "version": 1
+}

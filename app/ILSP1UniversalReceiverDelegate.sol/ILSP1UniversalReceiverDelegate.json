@@ -1,0 +1,274 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "caller",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "typeId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "universalReceiverDelegate",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "result",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "universalReceiverDelegate(address,uint256,bytes32,bytes)": "a245bbda"
+  },
+  "ast": {
+    "absolutePath": "packages/foundry-ts/lib/lsp-smart-contracts/contracts/LSP1UniversalReceiver/ILSP1UniversalReceiverDelegate.sol",
+    "id": 20384,
+    "exportedSymbols": {
+      "ILSP1UniversalReceiverDelegate": [
+        20383
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "36:912:17",
+    "nodes": [
+      {
+        "id": 20367,
+        "nodeType": "PragmaDirective",
+        "src": "36:23:17",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ]
+      },
+      {
+        "id": 20383,
+        "nodeType": "ContractDefinition",
+        "src": "281:666:17",
+        "nodes": [
+          {
+            "id": 20382,
+            "nodeType": "FunctionDefinition",
+            "src": "767:178:17",
+            "documentation": {
+              "id": 20369,
+              "nodeType": "StructuredDocumentation",
+              "src": "328:434:17",
+              "text": " @dev Get called by the universalReceiver function, can be customized to have a specific logic\n @param caller The address calling the universalReceiver function\n @param value The amount sent to the universalReceiver function\n @param typeId The hash of a specific standard or a hook\n @param data The arbitrary data received with the call\n @return result Any useful data could be returned"
+            },
+            "functionSelector": "a245bbda",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "universalReceiverDelegate",
+            "nameLocation": "776:25:17",
+            "parameters": {
+              "id": 20378,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 20371,
+                  "mutability": "mutable",
+                  "name": "caller",
+                  "nameLocation": "819:6:17",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 20382,
+                  "src": "811:14:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 20370,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "811:7:17",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 20373,
+                  "mutability": "mutable",
+                  "name": "value",
+                  "nameLocation": "843:5:17",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 20382,
+                  "src": "835:13:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 20372,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "835:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 20375,
+                  "mutability": "mutable",
+                  "name": "typeId",
+                  "nameLocation": "866:6:17",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 20382,
+                  "src": "858:14:17",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 20374,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "858:7:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 20377,
+                  "mutability": "mutable",
+                  "name": "data",
+                  "nameLocation": "895:4:17",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 20382,
+                  "src": "882:17:17",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 20376,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "882:5:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "801:104:17"
+            },
+            "returnParameters": {
+              "id": 20381,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 20380,
+                  "mutability": "mutable",
+                  "name": "result",
+                  "nameLocation": "937:6:17",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 20382,
+                  "src": "924:19:17",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 20379,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "924:5:17",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "923:21:17"
+            },
+            "scope": 20383,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ILSP1UniversalReceiverDelegate",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 20368,
+          "nodeType": "StructuredDocumentation",
+          "src": "61:219:17",
+          "text": " @title The interface for LSP1UniversalReceiverDelegate\n @dev LSP1UniversalReceiverDelegate allows for an external universal receiver smart contract,\n that is the delegate of the initial universal receiver"
+        },
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          20383
+        ],
+        "name": "ILSP1UniversalReceiverDelegate",
+        "nameLocation": "291:30:17",
+        "scope": 20384,
+        "usedErrors": []
+      }
+    ],
+    "license": "CC0-1.0"
+  },
+  "id": 17
+}

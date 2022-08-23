@@ -1,0 +1,220 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212206a9ce1f8b524560dc5801006b6ee17a03256f19711fa48b64d2278c2729c5ef764736f6c634300080f0033",
+    "sourceMap": "144:227:7:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;144:227:7;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212206a9ce1f8b524560dc5801006b6ee17a03256f19711fa48b64d2278c2729c5ef764736f6c634300080f0033",
+    "sourceMap": "144:227:7:-:0;;;;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "ast": {
+    "absolutePath": "packages/foundry-ts/lib/ERC725/implementations/contracts/utils/GasLib.sol",
+    "id": 945,
+    "exportedSymbols": {
+      "GasLib": [
+        944
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "39:333:7",
+    "nodes": [
+      {
+        "id": 928,
+        "nodeType": "PragmaDirective",
+        "src": "39:23:7",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ]
+      },
+      {
+        "id": 944,
+        "nodeType": "ContractDefinition",
+        "src": "144:227:7",
+        "nodes": [
+          {
+            "id": 943,
+            "nodeType": "FunctionDefinition",
+            "src": "235:134:7",
+            "body": {
+              "id": 942,
+              "nodeType": "Block",
+              "src": "306:63:7",
+              "statements": [
+                {
+                  "id": 941,
+                  "nodeType": "UncheckedBlock",
+                  "src": "316:47:7",
+                  "statements": [
+                    {
+                      "expression": {
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 939,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "id": 937,
+                          "name": "i",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 932,
+                          "src": "347:1:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "+",
+                        "rightExpression": {
+                          "hexValue": "31",
+                          "id": 938,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "351:1:7",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_1_by_1",
+                            "typeString": "int_const 1"
+                          },
+                          "value": "1"
+                        },
+                        "src": "347:5:7",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "functionReturnParameters": 936,
+                      "id": 940,
+                      "nodeType": "Return",
+                      "src": "340:12:7"
+                    }
+                  ]
+                }
+              ]
+            },
+            "documentation": {
+              "id": 930,
+              "nodeType": "StructuredDocumentation",
+              "src": "165:65:7",
+              "text": " @dev Will return unchecked incremented uint256"
+            },
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "uncheckedIncrement",
+            "nameLocation": "244:18:7",
+            "parameters": {
+              "id": 933,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 932,
+                  "mutability": "mutable",
+                  "name": "i",
+                  "nameLocation": "271:1:7",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 943,
+                  "src": "263:9:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 931,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "263:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "262:11:7"
+            },
+            "returnParameters": {
+              "id": 936,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 935,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 943,
+                  "src": "297:7:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 934,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "297:7:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "296:9:7"
+            },
+            "scope": 944,
+            "stateMutability": "pure",
+            "virtual": false,
+            "visibility": "internal"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "GasLib",
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": {
+          "id": 929,
+          "nodeType": "StructuredDocumentation",
+          "src": "64:79:7",
+          "text": " @dev Library to add all efficient functions that could get repeated."
+        },
+        "fullyImplemented": true,
+        "linearizedBaseContracts": [
+          944
+        ],
+        "name": "GasLib",
+        "nameLocation": "152:6:7",
+        "scope": 945,
+        "usedErrors": []
+      }
+    ],
+    "license": "Apache-2.0"
+  },
+  "id": 7
+}
