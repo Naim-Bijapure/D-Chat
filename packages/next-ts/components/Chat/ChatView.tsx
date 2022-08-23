@@ -5,7 +5,6 @@ import LSP6Schema from "@erc725/erc725.js/schemas/LSP6KeyManager.json";
 import LSP9Vault from "@erc725/erc725.js/schemas/LSP9Vault.json";
 import KeyManager from "@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json";
 import UniversalProfile from "@lukso/lsp-smart-contracts/artifacts/UniversalProfile.json";
-import axios from "axios";
 import { ContractInterface, ethers, Signer } from "ethers";
 import type { NextPage } from "next";
 import React, { useEffect, useState } from "react";
@@ -15,7 +14,6 @@ import { TbSend } from "react-icons/tb";
 import { useAccount, useSigner } from "wagmi";
 
 import { Vault, Vault__factory } from "../../contracts/contract-types";
-import { connectUserReponseType } from "../../types";
 
 const KEY_NAME = "chat:<string>:<string>";
 
@@ -34,13 +32,28 @@ const chatSchema = {
 erc725schema.push(chatSchema);
 
 interface IChatView {
-  onDeleteChat: () => any;
   chatMetaData: any;
-  setChatMetaData: (arg: any) => any;
   interests: string[];
+  isTyping: boolean;
+  onDeleteChat: () => any;
+  setChatMetaData: (arg: any) => any;
+  onEndChat: (arg: any) => any;
+  onStartChat: (arg: any) => any;
+  onStopChat: (arg: any) => any;
+  onTypingAlert: (arg: any) => any;
 }
 
-const ChatView: NextPage<IChatView> = ({ onDeleteChat, chatMetaData, setChatMetaData, interests }) => {
+const ChatView: NextPage<IChatView> = ({
+  chatMetaData,
+  isTyping,
+  interests,
+  onDeleteChat,
+  setChatMetaData,
+  onEndChat,
+  onStartChat,
+  onStopChat,
+  onTypingAlert,
+}) => {
   // const [chatMetaData, setChatMetaData] = useLocalStorage("chatMetaData", {
   //   activeChat: false,
   //   chatUsers: [],
@@ -63,7 +76,7 @@ const ChatView: NextPage<IChatView> = ({ onDeleteChat, chatMetaData, setChatMeta
 
   // l-mehtods
   const loadContracts: () => any = async () => {
-    console.log("chatMetaData: ", chatMetaData);
+    console.log("loadContracts >  chatMetaData: ", chatMetaData);
     const { UP_ADDRESS, VAULT_ADDRESS, DYNAMIC_KEY } = chatMetaData;
     const erc725 = new ERC725(
       // @ts-ignore
@@ -121,10 +134,8 @@ const ChatView: NextPage<IChatView> = ({ onDeleteChat, chatMetaData, setChatMeta
 
   const onSendMessage: () => any = async (): Promise<any> => {
     const users = [...chatMetaData["chatUsers"]];
-    console.log("dynamicKey: ", dynamicKey);
 
     const oldChatData = await vault["getData(bytes32)"](dynamicKey);
-    console.log("oldChatData: ", oldChatData);
 
     const vaultDecodedStringBefore = erc725?.decodeData({
       // @ts-ignore
@@ -174,33 +185,7 @@ const ChatView: NextPage<IChatView> = ({ onDeleteChat, chatMetaData, setChatMeta
       value: chatData,
     });
 
-    console.log("vaultDecodedString: ", decodedChatData);
     setChatMessage("");
-  };
-
-  const onNewChat: () => any = async () => {
-    const reqData = {
-      address,
-      interests,
-      operationType: "findUser",
-    };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
-      ...reqData,
-    });
-    console.log("connectedUserData: ", connectedUserData);
-    setIsFinding(true);
-  };
-
-  const onEndChat: () => any = async () => {
-    const reqData = {
-      address,
-      interests,
-      operationType: "findUser",
-    };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
-      ...reqData,
-    });
-    console.log("connectedUserData: ", connectedUserData);
   };
 
   // l-useeffect
@@ -227,12 +212,28 @@ const ChatView: NextPage<IChatView> = ({ onDeleteChat, chatMetaData, setChatMeta
     }
   }, [vault]);
 
+  // handle user events from localdata change
+  useEffect(() => {
+    if (chatMetaData && chatMetaData["activeChat"] === true) {
+      // on start chat
+      if (chatMetaData["CHAT_STATUS"] === "START") {
+        setIsFinding(false);
+      }
+
+      // on end chat
+      if (chatMetaData["CHAT_STATUS"] === "END") {
+        setDynamicKey("");
+        setMessagesData([]);
+      }
+    }
+  }, [chatMetaData]);
+
   return (
     <>
       <div className="flex flex-col items-start justify-center h-[100%] ">
         {/* <div className=""> */}
         {/* chat messages */}
-        <div className="p-2 overflow-y-scroll bg-gray-100 p--8 w-[80%] h--[300px]">
+        <div className="p-2 overflow-y-scroll bg-base-200 bg--gray-100 p--8 w-[80%] h--[300px]">
           <div className="max-w-4xl mx-auto space-y--12 space-y-4 grid grid-cols-1  ">
             {messagesData &&
               messagesData?.map((data, index) => {
@@ -263,26 +264,30 @@ const ChatView: NextPage<IChatView> = ({ onDeleteChat, chatMetaData, setChatMeta
           <div className="h-[70vh] ">
             {messagesData && messagesData.length === 0 && (
               <div className="flex flex-col items-center justify-center">
-                {isFinding === false && Boolean(dynamicKey) === false && (
+                {chatMetaData && chatMetaData["CHAT_STATUS"] === "END" && (
                   <>
                     <div>
                       find new chat click on
-                      <button className="m-2 btn btn-accent btn-xs" onClick={onNewChat}>
+                      <button className="m-2 btn btn-accent btn-xs" onClick={onStartChat}>
                         New
                       </button>
                     </div>
                   </>
                 )}
 
-                {isFinding && Boolean(dynamicKey) === false && (
+                {chatMetaData && chatMetaData["CHAT_STATUS"] === "FINDING" && (
                   <div>
                     <div className="opacity-100 mt-44 animate-pulse">Hold on looking for a chat....</div>
 
-                    <div className="mt--44">{isFinding && <progress className="w-56 progress progress-primary" />}</div>
+                    <div className="mt--44">
+                      {chatMetaData["CHAT_STATUS"] === "FINDING" && (
+                        <progress className="w-56 progress progress-primary" />
+                      )}
+                    </div>
                   </div>
                 )}
 
-                {Boolean(dynamicKey) === true && (
+                {chatMetaData && chatMetaData["CHAT_STATUS"] === "START" && (
                   <div className="mt-44">
                     <div className="">Found a match with common interest !!</div>
                     <div className="">Say,hi 👋 to stranger.. </div>
@@ -291,23 +296,38 @@ const ChatView: NextPage<IChatView> = ({ onDeleteChat, chatMetaData, setChatMeta
               </div>
             )}
           </div>
+
+          {/* real time interaction alert */}
+          {isTyping && (
+            <div className="text-center">
+              <div className="animate-bounce">typing...</div>
+            </div>
+          )}
         </div>
 
         {/* MESSAGE INPUT  */}
         <div className="sticky bottom-0 z-50 w-[80%] ">
           <div className="form-control">
             <div className="input-group ">
-              {messagesData.length === 0 && Boolean(dynamicKey) === false && (
+              {chatMetaData && chatMetaData["CHAT_STATUS"] === "FINDING" && (
                 <>
-                  <button className="btn btn-accent  " onClick={onNewChat}>
+                  <button className="btn btn-error  " onClick={onStopChat}>
+                    Stop
+                  </button>
+                </>
+              )}
+
+              {chatMetaData && chatMetaData["CHAT_STATUS"] === "END" && (
+                <>
+                  <button className="btn btn-accent  " onClick={onStartChat}>
                     New
                   </button>
                 </>
               )}
 
-              {Boolean(dynamicKey) === true && (
+              {chatMetaData && chatMetaData["CHAT_STATUS"] === "START" && (
                 <>
-                  <button className="btn btn-warning  " onClick={onNewChat}>
+                  <button className="btn btn-warning  " onClick={onEndChat}>
                     End
                   </button>
                 </>
@@ -321,6 +341,14 @@ const ChatView: NextPage<IChatView> = ({ onDeleteChat, chatMetaData, setChatMeta
                 onChange={(e): any => setChatMessage(e.target.value)}
                 onKeyDown={(e): any => e.key === "Enter" && onSendMessage()}
                 disabled={Boolean(dynamicKey) === false}
+                onFocus={(): any => {
+                  console.log("typing ");
+                  onTypingAlert(true);
+                }}
+                onBlur={(): any => {
+                  console.log("not typing ");
+                  onTypingAlert(false);
+                }}
               />
               <button className="btn btn-primary  " onClick={onSendMessage}>
                 <TbSend scale={100} />

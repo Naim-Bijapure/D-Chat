@@ -13,8 +13,8 @@ import Web3 from "web3";
 import account from "../../contracts/account.json";
 import { Vault__factory } from "../../contracts/contract-types";
 
-const UP_ADDRESS = "0xa7d9F8324Fb1796827cE840e71919F62829d3567";
-const VAULT_ADDRESS = "0xBad1e675daB50D104f046AB5551A1353A23a8d3a";
+const UP_ADDRESS = "0x8e23892BC826baff4edF08b330b6c114E39eF5ec";
+const VAULT_ADDRESS = "0x5c67617D533412FAC64958f450B8C637c949Da14";
 const RPC_URL = "http://0.0.0.0:8545";
 
 // type Data = {
@@ -23,7 +23,7 @@ const RPC_URL = "http://0.0.0.0:8545";
 
 const web3provider = new Web3.providers.HttpProvider(RPC_URL);
 const provider = new ethers.providers.StaticJsonRpcProvider(RPC_URL);
-const walletSigner = new ethers.Wallet(account.privateKey, provider); // <---- custom signer from EOA account
+const walletSigner = new ethers.Wallet(account.privateKey as string, provider); // <---- custom signer from EOA account
 
 let UP: ethers.Contract, KM: ethers.Contract, VAULT: ethers.Contract, erc725: ERC725;
 

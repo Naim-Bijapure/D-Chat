@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import axios from "axios";
 import type { NextPage } from "next";
@@ -9,6 +10,7 @@ import io from "socket.io-client";
 import { useAccount } from "wagmi";
 
 import ChatView from "../components/Chat/ChatView";
+import { Sleep } from "../components/DebugContract/configs/utils";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { connectUserReponseType } from "../types";
 
@@ -23,6 +25,7 @@ const Home: NextPage = () => {
   const [isFinding, setIsFinding] = useState<boolean>(false);
   const [fetchToggler, setFetchToggler] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
   const { address, isConnected } = useAccount();
   // const { data } = useBalance({ addressOrName: address });
@@ -34,12 +37,13 @@ const Home: NextPage = () => {
     UP_ADDRESS: "",
     VAULT_ADDRESS: "",
     DYNAMIC_KEY: "",
+    CHAT_STATUS: "END",
   });
 
   const [interests, setInterests] = useLocalStorage("interests", []);
 
   // l-methods
-  const onStartChat: () => any = async (): Promise<any> => {
+  const onCreateChat: () => any = async (): Promise<any> => {
     console.log("onStartChat: ", interests);
 
     // GRANT THE USER PERMISSION
@@ -55,54 +59,12 @@ const Home: NextPage = () => {
       activeChat: true,
       UP_ADDRESS,
       VAULT_ADDRESS,
+      CHAT_STATUS: "END",
     });
-
-    //  CONNECT USER API
-    // const reqData = {
-    //   address,
-    //   interests,
-    //   operationType: "findUser",
-    // };
-    // const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
-    //   ...reqData,
-    // });
-    // console.log("connectedUserData: ", connectedUserData);
-
-    // if (connectedUserData.status === "NO_MATCH") {
-    //   // setIsFinding(true);
-    // }
-
-    // if (connectedUserData.status === "MATCH") {
-    //   // setIsFinding(false);
-    //   // // GRANT THE USER PERMISSION
-    //   // let permissionData = await axios.post(`${BASE_URL}/api/grantPermission?address=${address}`);
-    //   // permissionData = permissionData.data;
-    //   // console.log("permissionData: ", permissionData);
-    //   // const UP_ADDRESS = permissionData["UP_ADDRESS"];
-    //   // const VAULT_ADDRESS = permissionData["VAULT_ADDRESS"];
-    //   // // TEMP CONNECT USER API (MAKE IT DYNAMIMC WITH RANDOMLY USER CONNECTION)
-    //   // const dynamicKey = connectedUserData.dynamicKey;
-    //   // setChatMetaData({
-    //   //   ...chatMetaData,
-    //   //   chatUsers: [...(connectedUserData.users as string[])],
-    //   //   activeChat: true,
-    //   //   UP_ADDRESS,
-    //   //   VAULT_ADDRESS,
-    //   //   DYNAMIC_KEY: dynamicKey,
-    //   // });
-    //   // const dynamicKey = connectedUserData.dynamicKey;
-    //   // setChatMetaData({
-    //   //   ...chatMetaData,
-    //   //   chatUsers: [...(connectedUserData.users as string[])],
-    //   //   activeChat: true,
-    //   //   DYNAMIC_KEY: dynamicKey,
-    //   //   UP_ADDRESS,
-    //   //   VAULT_ADDRESS,
-    //   // });
-    // }
   };
 
   const onTest: () => any = () => {
+    console.log("onTest: ");
     // const addrArray = [
     //   "0x7cC872ADc952186D7E9C8C8575cb407cb4046230",
     //   "0xDc33aB45de06754C667d438f1C975C3c45a986E1",
@@ -112,13 +74,20 @@ const Home: NextPage = () => {
     // const result = addrArray;
     // console.log("result: ", result);
     // window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
-
-    socket.emit("createRoom", address);
   };
 
   const onDeleteChat: () => any = async (): Promise<any> => {
     setChatMetaData({
       activeChat: false,
+    });
+
+    const reqData = {
+      address,
+      operationType: "END_CHAT",
+      users: chatMetaData.chatUsers,
+    };
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+      ...reqData,
     });
   };
 
@@ -181,7 +150,7 @@ const Home: NextPage = () => {
     }, 2000);
   };
 
-  const socketInitializer: () => any = async () => {
+  const onSocketListener: () => any = async () => {
     await axios.get("/api/socket");
     socket = io();
 
@@ -196,7 +165,6 @@ const Home: NextPage = () => {
 
     socket.on("MATCH", (data) => {
       console.log("data:match ", data);
-      // console.log("chatMetaData: ", chatMetaData);
 
       const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
 
@@ -205,8 +173,86 @@ const Home: NextPage = () => {
         chatUsers: [...(data.users as string[])],
         // activeChat: true,
         DYNAMIC_KEY: data.dynamicKey,
+        CHAT_STATUS: "START",
+      });
+
+      const localChatMetaData1 = JSON.parse(localStorage.getItem("chatMetaData") as string);
+      console.log("localChatMetaData1: ", localChatMetaData1);
+    });
+
+    socket.on("END_CHAT", (data) => {
+      // console.log('"END_CHAT": ', data);
+      // console.log("chatMetaData: ", chatMetaData);
+
+      const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
+
+      setChatMetaData({
+        ...localChatMetaData,
+        chatUsers: [],
+        activeChat: true,
+        DYNAMIC_KEY: undefined,
+        CHAT_STATUS: "END",
       });
     });
+
+    socket.on("TYPING_ALERT", (typingStatus) => {
+      console.log("typingStatus: ", typingStatus);
+      setIsTyping(typingStatus as boolean);
+    });
+  };
+
+  const onStartChat: () => any = async () => {
+    const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
+    setChatMetaData({ ...localChatMetaData, CHAT_STATUS: "FINDING" });
+
+    await Sleep(2000);
+
+    const reqData = {
+      address,
+      interests,
+      operationType: "findUser",
+    };
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+      ...reqData,
+    });
+  };
+
+  const onStopChat: () => any = async () => {
+    const reqData = {
+      address,
+      operationType: "END_CHAT",
+      users: [address],
+    };
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+      ...reqData,
+    });
+    console.log("connectedUserData: ", connectedUserData);
+  };
+
+  const onEndChat: () => any = async () => {
+    const reqData = {
+      address,
+      operationType: "END_CHAT",
+      users: chatMetaData.chatUsers,
+    };
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+      ...reqData,
+    });
+    console.log("connectedUserData: ", connectedUserData);
+  };
+
+  const onTypingAlert: (isFocus: boolean) => any = async (isFocus: boolean) => {
+    console.log("isFocus: ", isFocus);
+    const reqData = {
+      address,
+      operationType: "TYPING_ALERT",
+      users: chatMetaData.chatUsers,
+      isFocus,
+    };
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+      ...reqData,
+    });
+    console.log("connectedUserData: ", connectedUserData);
   };
 
   // l-useEffects
@@ -219,19 +265,12 @@ const Home: NextPage = () => {
     // join the user address room
   }, [isConnected]);
 
-  // check isFinding and call api to get update
-  // useEffect(() => {
-  //   if (isFinding === true) {
-  //     // findMatch();
-  //   }
-  // }, [isFinding, fetchToggler]);
-
   useEffect(() => setMounted(true), []); // at init only
 
   useEffect((): any => {
     if (mounted) {
       console.log("useEffect: socket initilizer");
-      void socketInitializer();
+      void onSocketListener();
     }
   }, [mounted]);
 
@@ -274,7 +313,7 @@ const Home: NextPage = () => {
             </div>
 
             {/* find button */}
-            <button className="m-1 btn btn-accent " onClick={onStartChat} disabled={interests.length === 0}>
+            <button className="m-1 btn btn-accent " onClick={onCreateChat} disabled={interests.length === 0}>
               find random chat
             </button>
 
@@ -288,8 +327,13 @@ const Home: NextPage = () => {
             <ChatView
               onDeleteChat={onDeleteChat}
               chatMetaData={chatMetaData}
-              setChatMetaData={setChatMetaData}
               interests={interests}
+              setChatMetaData={setChatMetaData}
+              onEndChat={onEndChat}
+              onStartChat={onStartChat}
+              onStopChat={onStopChat}
+              onTypingAlert={onTypingAlert}
+              isTyping={isTyping}
             />
           </div>
         )}

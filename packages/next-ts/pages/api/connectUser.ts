@@ -19,7 +19,6 @@ const connectUsers: connectUsersType = {};
 export default function handler(req: NextApiRequest, res: NextApiResponseWithSocket): any {
   const reqData = req.body;
   const userAddress = reqData.address;
-  const interests = reqData.interests;
   const operationType = reqData.operationType;
   console.log("reqData: ", reqData);
 
@@ -27,6 +26,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponseWithSoc
    * ON FIND USER
    * ---------------------*/
   if (operationType === "findUser") {
+    const interests = reqData.interests;
+
     let isInterestMatching = false;
     let matchedAdress = "0x";
     // find any exissting match
@@ -60,7 +61,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponseWithSoc
     // global.connectUsers = connectUsers;
 
     if (connectUsers[matchedAdress]) {
-      console.log("connectUsers[matchedAdress]: ", connectUsers[matchedAdress]);
+      // console.log("connectUsers[matchedAdress]: ", connectUsers[matchedAdress]);
       const userData = connectUsers[matchedAdress];
       res.socket.server.io.to(userData.users![0]).emit("MATCH", userData);
       res.socket.server.io.to(userData.users![1]).emit("MATCH", userData);
@@ -72,7 +73,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponseWithSoc
     }
 
     if (connectUsers[matchedAdress] === undefined) {
-      console.log("connectUsers[userAddress]: ", connectUsers[userAddress]);
+      // console.log("connectUsers[userAddress]: ", connectUsers[userAddress]);
       return res.status(200).json({
         ...connectUsers[userAddress],
       });
@@ -82,7 +83,39 @@ export default function handler(req: NextApiRequest, res: NextApiResponseWithSoc
   /** ----------------------
    * ON CLEAR USER CHAT DATA
    * ---------------------*/
-  if (operationType === "clearChatData") {
-    res.status(200).json({ status: "NO_MATCH" });
+  if (operationType === "END_CHAT") {
+    const users = reqData.users as string[];
+    console.log("users: ", users);
+    res.socket.server.io.to(users[0]).emit("END_CHAT", true);
+    users[1] && res.socket.server.io.to(users[1]).emit("END_CHAT", true);
+
+    // clear user data from the obj
+    if (users[0] in connectUsers) {
+      delete connectUsers[users[0]];
+    }
+
+    if (users[1] in connectUsers) {
+      delete connectUsers[users[1]];
+    }
+
+    console.log("connectUsers: ", connectUsers);
+
+    res.status(200).json({ status: "END_CHAT" });
+  }
+
+  /** ----------------------
+   *ON TYPING ALERT
+   * ---------------------*/
+  if (operationType === "TYPING_ALERT") {
+    const users = reqData.users as string[];
+    const isFocus = reqData.isFocus;
+    userAddress;
+    let toSendAddress: any = users.filter((address) => address !== userAddress);
+    toSendAddress = toSendAddress[0];
+    console.log("toSendAddress: ", toSendAddress);
+    res.socket.server.io.to(toSendAddress as string).emit("TYPING_ALERT", isFocus);
+    // users[1] && res.socket.server.io.to(users[1]).emit("END_CHAT", true);
+
+    res.status(200).json({ status: "TYPING_ALERT" });
   }
 }
