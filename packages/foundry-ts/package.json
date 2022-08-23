@@ -25,7 +25,7 @@
     "hh:watch-test": "hardhat watch compilation & hardhat watch test --network hardhat",
     "--------": "--------------Forge Commands---------------",
     "forge:install": "forge install  --no-commit ",
-    "forge:build": "forge build && yarn generate-types ",
+    "forge:build": "rm -rf out && forge build  && rm -rf out/**/*.metadata.json && yarn generate-types ",
     "forge:watch": "forge build --watch ",
     "forge:clean": "forge clean ",
     "forge:test": "forge test ",
@@ -33,7 +33,7 @@
     "forge:generate": "ts-node  --ignore 'generated/*' scripts/generate.ts",
     "forge:account": "ts-node scripts/account.ts",
     "forge:deploy": "cross-env ETHERSCAN_API_KEY=KP6ZGYIWNJ5XK2NKJK8N477A7XKMU75C2D ts-node --ignore 'out/*.json'   scripts/deploy.ts ",
-    "generate-types": "typechain  --discriminate-types --target=ethers-v5 'out/**/*.json' --out-dir=./generated/contract-types ",
+    "generate-types": "typechain   --target=ethers-v5 'out/**/*.json' --out-dir=./generated/contract-types ",
     "foundry:install": "chmod +x foundry-init.mjs && zx foundry-init.mjs",
     "foundry:help": "chmod +x help.mjs && zx help.mjs"
   },
