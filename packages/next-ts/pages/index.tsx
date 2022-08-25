@@ -26,6 +26,7 @@ const Home: NextPage = () => {
   const [fetchToggler, setFetchToggler] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [isMsgComing, setIsMsgComing] = useState(false);
 
   const { address, isConnected } = useAccount();
   // const { data } = useBalance({ addressOrName: address });
@@ -73,7 +74,7 @@ const Home: NextPage = () => {
     // // const result = addrArray.sort();
     // const result = addrArray;
     // console.log("result: ", result);
-    // window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
+    window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const onDeleteChat: () => any = async (): Promise<any> => {
@@ -195,9 +196,20 @@ const Home: NextPage = () => {
       });
     });
 
-    socket.on("TYPING_ALERT", (typingStatus) => {
-      console.log("typingStatus: ", typingStatus);
+    socket.on("TYPING_ALERT", async (typingStatus) => {
+      // console.log("typingStatus: ", typingStatus);
       setIsTyping(typingStatus as boolean);
+
+      await Sleep(400);
+      window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
+    });
+
+    socket.on("MSG_INCOMING_ALERT", async (msgIncomingStatus) => {
+      // console.log("typingStatus: ", typingStatus);
+      setIsMsgComing(msgIncomingStatus as boolean);
+
+      await Sleep(400);
+      window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
     });
   };
 
@@ -242,7 +254,6 @@ const Home: NextPage = () => {
   };
 
   const onTypingAlert: (isFocus: boolean) => any = async (isFocus: boolean) => {
-    console.log("isFocus: ", isFocus);
     const reqData = {
       address,
       operationType: "TYPING_ALERT",
@@ -252,7 +263,20 @@ const Home: NextPage = () => {
     const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
       ...reqData,
     });
-    console.log("connectedUserData: ", connectedUserData);
+    // console.log("connectedUserData: ", connectedUserData);
+  };
+
+  const onMsgIncomingAlert: (isFocus: boolean) => any = async (isFocus: boolean) => {
+    const reqData = {
+      address,
+      operationType: "MSG_INCOMING_ALERT",
+      users: chatMetaData.chatUsers,
+      isFocus,
+    };
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+      ...reqData,
+    });
+    // console.log("connectedUserData: ", connectedUserData);
   };
 
   // l-useEffects
@@ -333,7 +357,9 @@ const Home: NextPage = () => {
               onStartChat={onStartChat}
               onStopChat={onStopChat}
               onTypingAlert={onTypingAlert}
+              onMsgIncomingAlert={onMsgIncomingAlert}
               isTyping={isTyping}
+              isMsgComing={isMsgComing}
             />
           </div>
         )}

@@ -112,10 +112,21 @@ export default function handler(req: NextApiRequest, res: NextApiResponseWithSoc
     userAddress;
     let toSendAddress: any = users.filter((address) => address !== userAddress);
     toSendAddress = toSendAddress[0];
-    console.log("toSendAddress: ", toSendAddress);
     res.socket.server.io.to(toSendAddress as string).emit("TYPING_ALERT", isFocus);
     // users[1] && res.socket.server.io.to(users[1]).emit("END_CHAT", true);
 
     res.status(200).json({ status: "TYPING_ALERT" });
+  }
+
+  if (operationType === "MSG_INCOMING_ALERT") {
+    const users = reqData.users as string[];
+    const isFocus = reqData.isFocus;
+    userAddress;
+    let toSendAddress: any = users.filter((address) => address !== userAddress);
+    toSendAddress = toSendAddress[0];
+    res.socket.server.io.to(toSendAddress as string).emit("MSG_INCOMING_ALERT", isFocus);
+    // users[1] && res.socket.server.io.to(users[1]).emit("END_CHAT", true);
+
+    res.status(200).json({ status: "MSG_INCOMING_ALERT" });
   }
 }

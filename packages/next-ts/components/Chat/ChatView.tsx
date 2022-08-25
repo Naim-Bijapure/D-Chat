@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import ERC725 from "@erc725/erc725.js";
 import LSP10ReceivedVaults from "@erc725/erc725.js/schemas/LSP10ReceivedVaults.json";
 import erc725schema from "@erc725/erc725.js/schemas/LSP3UniversalProfileMetadata.json";
@@ -5,15 +6,19 @@ import LSP6Schema from "@erc725/erc725.js/schemas/LSP6KeyManager.json";
 import LSP9Vault from "@erc725/erc725.js/schemas/LSP9Vault.json";
 import KeyManager from "@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json";
 import UniversalProfile from "@lukso/lsp-smart-contracts/artifacts/UniversalProfile.json";
+import axios from "axios";
 import { ContractInterface, ethers, Signer } from "ethers";
 import type { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 // import { GrSend } from "react-icons/gr";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
+import { RotatingSquare, ThreeDots } from "react-loader-spinner";
 import { useAccount, useSigner } from "wagmi";
 
 import { Vault, Vault__factory } from "../../contracts/contract-types";
+import { Sleep } from "../configs/utils";
+import Blockie from "../EthComponents/Blockie";
 
 const KEY_NAME = "chat:<string>:<string>";
 
@@ -35,24 +40,28 @@ interface IChatView {
   chatMetaData: any;
   interests: string[];
   isTyping: boolean;
+  isMsgComing: boolean;
   onDeleteChat: () => any;
   setChatMetaData: (arg: any) => any;
   onEndChat: (arg: any) => any;
   onStartChat: (arg: any) => any;
   onStopChat: (arg: any) => any;
   onTypingAlert: (arg: any) => any;
+  onMsgIncomingAlert: (arg: any) => any;
 }
 
 const ChatView: NextPage<IChatView> = ({
   chatMetaData,
   isTyping,
   interests,
+  isMsgComing,
   onDeleteChat,
   setChatMetaData,
   onEndChat,
   onStartChat,
   onStopChat,
   onTypingAlert,
+  onMsgIncomingAlert,
 }) => {
   // const [chatMetaData, setChatMetaData] = useLocalStorage("chatMetaData", {
   //   activeChat: false,
@@ -73,6 +82,7 @@ const ChatView: NextPage<IChatView> = ({
   const [dynamicKey, setDynamicKey] = useState<string>("");
   const [messagesData, setMessagesData] = useState<any[]>([]);
   const [isFinding, setIsFinding] = useState<boolean>(false);
+  const [isMsgSending, setIsMsgSending] = useState<boolean>(false);
 
   // l-mehtods
   const loadContracts: () => any = async () => {
@@ -103,7 +113,7 @@ const ChatView: NextPage<IChatView> = ({
     setDynamicKey(DYNAMIC_KEY as string);
   };
 
-  const loadMessages = (): any => {
+  const loadMessages: () => any = () => {
     vault.on("DataChanged", async (dataKey) => {
       if (dynamicKey === dataKey) {
         console.log("message data changed event  ");
@@ -123,16 +133,37 @@ const ChatView: NextPage<IChatView> = ({
         // console.log("load messages oldValues: ", oldValues);
         const messages: any[] = [];
         if (Array.isArray(oldValues)) {
-          oldValues.map((msg: string) => messages.push(JSON.parse(msg)));
+          // oldValues.map((msg: string) => messages.push(JSON.parse(msg)));
+          oldValues.map((msg: string) => messages.push(msg));
         }
 
-        console.log("messages: ", messages);
-        setMessagesData(messages);
+        // console.log("messages: ", messages);
+
+        const reqData = {
+          type: "DECRYPT",
+          encryptedData: messages,
+        };
+
+        // get decrypted data from server
+        const { data: decryptedData } = await axios.post(`/api/encryptDecryptMsg`, {
+          ...reqData,
+        });
+
+        setMessagesData(decryptedData.messagesData as []);
+        onMsgIncomingAlert(false);
+        // setMessagesData(messages);
       }
     });
   };
 
   const onSendMessage: () => any = async (): Promise<any> => {
+    onMsgIncomingAlert(true);
+    setIsMsgSending(true);
+
+    await Sleep(300);
+    // get focus on wait alert
+    window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
+
     const users = [...chatMetaData["chatUsers"]];
 
     const oldChatData = await vault["getData(bytes32)"](dynamicKey);
@@ -151,12 +182,24 @@ const ChatView: NextPage<IChatView> = ({
       message: chatMessage,
     };
 
+    const reqData = {
+      type: "ENCRYPT",
+      msgData,
+    };
+
+    // encrypt the data
+    const { data } = await axios.post(`/api/encryptDecryptMsg`, {
+      ...reqData,
+    });
+
+    const encryptedData = data.encryptedData;
+
     const encodedChatData = erc725?.encodeData({
       // @ts-ignore
       keyName: KEY_NAME,
       dynamicKeyParts: [...users],
-      // value: [...oldValues, `{user:'asdfasdf',msg:'hello naim add before' }`],
-      value: [...oldData, JSON.stringify(msgData)],
+      // value: [...oldData, JSON.stringify(msgData)],
+      value: [...oldData, encryptedData],
     });
 
     // @ts-ignore
@@ -185,6 +228,8 @@ const ChatView: NextPage<IChatView> = ({
       value: chatData,
     });
 
+    // onMsgIncomingAlert(false);
+    setIsMsgSending(false);
     setChatMessage("");
   };
 
@@ -233,17 +278,21 @@ const ChatView: NextPage<IChatView> = ({
       <div className="flex flex-col items-start justify-center h-[100%] ">
         {/* <div className=""> */}
         {/* chat messages */}
-        <div className="p-2 overflow-y-scroll bg-base-200 bg--gray-100 p--8 w-[80%] h--[300px]">
+        <div className="p-2 overflow-y-scroll bg-base-200 bg--gray-100 p--8 w-[80%] h-[80vh] ">
           <div className="max-w-4xl mx-auto space-y--12 space-y-4 grid grid-cols-1  ">
             {messagesData &&
               messagesData?.map((data, index) => {
                 return (
                   <React.Fragment key={index}>
                     {/* recepient message */}
+
                     <div
                       className={`text-left place-self-start ${data["address"] !== address ? "block" : "hidden"}`}
                       id={messagesData.length - 1 === index ? "LATEST_MESSAGE" : ""}
                       style={{ scrollBehavior: "smooth" }}>
+                      <div className="mb-1">
+                        <Blockie address={data["address"]} scale={7} />
+                      </div>
                       <div className="p-5 bg-white rounded-tl-none rounded-2xl">{data["message"]}</div>
                     </div>
 
@@ -261,7 +310,7 @@ const ChatView: NextPage<IChatView> = ({
               })}
           </div>
           {/* find chat loading screen */}
-          <div className="h-[70vh] ">
+          <div className="h--[70vh] ">
             {messagesData && messagesData.length === 0 && (
               <div className="flex flex-col items-center justify-center">
                 {chatMetaData && chatMetaData["CHAT_STATUS"] === "END" && (
@@ -303,6 +352,43 @@ const ChatView: NextPage<IChatView> = ({
               <div className="animate-bounce">typing...</div>
             </div>
           )}
+
+          {/* on send message alert */}
+
+          {isMsgSending && (
+            <div className="flex flex-col items-center justify-center" id="LATEST_MESSAGE">
+              <RotatingSquare
+                height="100"
+                width="100"
+                color="#4fa94d"
+                ariaLabel="rotating-square-loading"
+                strokeWidth="4"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+              />
+              <div className="text-opacity-40 text-accent-content">wait sending message...</div>
+            </div>
+          )}
+
+          {/* on incoming messag alert */}
+          {isMsgComing === true && (
+            <div className="flex flex-col items-center justify-center">
+              <ThreeDots
+                height="30"
+                width="60"
+                radius="10"
+                // color="#4fa94d"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass="flex justify-center "
+                visible={true}
+              />
+              <div className="text-opacity-40 text-accent-content" id="LATEST_MESSAGE">
+                Wait incoming message...
+              </div>
+            </div>
+          )}
         </div>
 
         {/* MESSAGE INPUT  */}
@@ -339,18 +425,21 @@ const ChatView: NextPage<IChatView> = ({
                 className="w-full input input-bordered rounded-l-md"
                 value={chatMessage}
                 onChange={(e): any => setChatMessage(e.target.value)}
-                onKeyDown={(e): any => e.key === "Enter" && onSendMessage()}
-                disabled={Boolean(dynamicKey) === false}
+                onKeyDown={(e): any =>
+                  e.key === "Enter" && isMsgSending === false && Boolean(dynamicKey) && onSendMessage()
+                }
+                disabled={Boolean(dynamicKey) === false || isMsgSending === true}
                 onFocus={(): any => {
-                  console.log("typing ");
                   onTypingAlert(true);
                 }}
                 onBlur={(): any => {
-                  console.log("not typing ");
                   onTypingAlert(false);
                 }}
               />
-              <button className="btn btn-primary  " onClick={onSendMessage}>
+              <button
+                className="btn btn-primary  "
+                onClick={onSendMessage}
+                disabled={isMsgComing === true || isMsgSending === true}>
                 <TbSend scale={100} />
               </button>
 
