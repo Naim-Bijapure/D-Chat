@@ -2431,6 +2431,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@scaffold-eth/next-typescript@workspace:."
   dependencies:
+    "@typechain/ethers-v5": ^10.1.0
     cross-env: ^7.0.3
     eslint: ^8.14.0
     husky: ^8.0.0

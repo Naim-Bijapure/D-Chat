@@ -13,9 +13,9 @@ import Web3 from "web3";
 import account from "../../contracts/account.json";
 import { Vault__factory } from "../../contracts/contract-types";
 
-const UP_ADDRESS = "0x4c77290de4e93110678Ceb3F9B2d28f90C9d0f73";
-const VAULT_ADDRESS = "0x77FE74BB6C1f52eA43cF8a3e5cae04937Ebaac95";
-const RPC_URL = "http://0.0.0.0:8545";
+const UP_ADDRESS = "0x0fd3D152D8Db789549cfF31D825f6335Db4b271E";
+const VAULT_ADDRESS = "0x4db6D4ff7eB17a23Ca5Cd475561d6d622c806EF1";
+const RPC_URL = "https://rpc.l16.lukso.network";
 
 // type Data = {
 //   data: number[];
