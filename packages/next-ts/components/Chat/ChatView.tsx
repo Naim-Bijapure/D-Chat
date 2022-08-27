@@ -9,14 +9,15 @@ import UniversalProfile from "@lukso/lsp-smart-contracts/artifacts/UniversalProf
 import axios from "axios";
 import { ContractInterface, ethers, Signer } from "ethers";
 import type { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // import { GrSend } from "react-icons/gr";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
-import { RotatingSquare, ThreeDots } from "react-loader-spinner";
-import { useAccount, useSigner } from "wagmi";
+import { FallingLines, RotatingSquare, ThreeDots } from "react-loader-spinner";
+import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
 
 import { Vault, Vault__factory } from "../../contracts/contract-types";
+import { connectUserReponseType } from "../../types";
 import { Sleep } from "../configs/utils";
 import Blockie from "../EthComponents/Blockie";
 
@@ -41,9 +42,9 @@ interface IChatView {
   interests: string[];
   isTyping: boolean;
   isMsgComing: boolean;
-  onDeleteChat: () => any;
+  // onDeleteChat: () => any;
   setChatMetaData: (arg: any) => any;
-  onEndChat: (arg: any) => any;
+  // onEndChat: (arg: any) => any;
   onStartChat: (arg: any) => any;
   onStopChat: (arg: any) => any;
   onTypingAlert: (arg: any) => any;
@@ -55,9 +56,9 @@ const ChatView: NextPage<IChatView> = ({
   isTyping,
   interests,
   isMsgComing,
-  onDeleteChat,
+  // onDeleteChat,
   setChatMetaData,
-  onEndChat,
+  // onEndChat,
   onStartChat,
   onStopChat,
   onTypingAlert,
@@ -70,8 +71,11 @@ const ChatView: NextPage<IChatView> = ({
   //   VAULT_ADDRESS: "",
   // });
 
+  // l-wagmi hooks
   const { address } = useAccount();
   const { data: signer } = useSigner();
+  const { chain } = useNetwork();
+  const provider = useProvider();
 
   // l-states
   const [erc725, setErc725] = useState<ERC725>();
@@ -84,9 +88,10 @@ const ChatView: NextPage<IChatView> = ({
   const [isFinding, setIsFinding] = useState<boolean>(false);
   const [isMsgSending, setIsMsgSending] = useState<boolean>(false);
 
+  const messagesCount = useRef<number>(0);
+
   // l-mehtods
   const loadContracts: () => any = async () => {
-    console.log("loadContracts >  chatMetaData: ", chatMetaData);
     const { UP_ADDRESS, VAULT_ADDRESS, DYNAMIC_KEY } = chatMetaData;
     const erc725 = new ERC725(
       // @ts-ignore
@@ -134,10 +139,8 @@ const ChatView: NextPage<IChatView> = ({
         const messages: any[] = [];
         if (Array.isArray(oldValues)) {
           // oldValues.map((msg: string) => messages.push(JSON.parse(msg)));
-          oldValues.map((msg: string) => messages.push(msg));
+          oldValues.map((msg: string) => Boolean(msg) && messages.push(msg));
         }
-
-        // console.log("messages: ", messages);
 
         const reqData = {
           type: "DECRYPT",
@@ -149,9 +152,10 @@ const ChatView: NextPage<IChatView> = ({
           ...reqData,
         });
 
-        setMessagesData(decryptedData.messagesData as []);
-        onMsgIncomingAlert(false);
-        // setMessagesData(messages);
+        if (messages.length !== messagesCount.current) {
+          setMessagesData(decryptedData.messagesData as []);
+          // onMsgIncomingAlert(false);
+        }
       }
     });
   };
@@ -175,7 +179,10 @@ const ChatView: NextPage<IChatView> = ({
       value: oldChatData,
     });
 
-    const oldData = vaultDecodedStringBefore?.value !== null ? vaultDecodedStringBefore?.value : [];
+    let oldData = vaultDecodedStringBefore?.value !== null ? vaultDecodedStringBefore?.value : [];
+    oldData = oldData.filter((msg) => Boolean(msg) === true);
+
+    console.log("oldData: ", oldData);
 
     const msgData = {
       address: address,
@@ -216,34 +223,105 @@ const ChatView: NextPage<IChatView> = ({
       setDataVaultPayload,
     ]);
 
+    // on execute call
     const tx = await km?.connect(signer as Signer).execute(vaultExecutePayload, { gasLimit: 10000000 }); // <---- call the execute on key manager contract
     const rcpt = await tx.wait();
-
-    const chatData = await vault["getData(bytes32)"](dynamicKey);
-
-    const decodedChatData = erc725?.decodeData({
-      // @ts-ignore
-      keyName: KEY_NAME,
-      dynamicKeyParts: [...users],
-      value: chatData,
-    });
 
     // onMsgIncomingAlert(false);
     setIsMsgSending(false);
     setChatMessage("");
   };
+  const clearChat: () => any = async () => {
+    try {
+      const users = [...chatMetaData["chatUsers"]];
+
+      setChatMetaData({ ...chatMetaData, CHAT_STATUS: "ENDING" });
+
+      await Sleep(300);
+      // get focus on wait alert
+      window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
+
+      const encodedChatData = erc725?.encodeData({
+        // @ts-ignore
+        keyName: KEY_NAME,
+        dynamicKeyParts: [...users],
+        value: [""],
+      });
+
+      // @ts-ignore
+      const setDataVaultPayload = vault.interface.encodeFunctionData("setData(bytes32[],bytes[])", [
+        encodedChatData?.keys,
+        encodedChatData?.values,
+      ]);
+
+      // @ts-ignore
+      const vaultExecutePayload = vault.interface.encodeFunctionData("execute", [
+        0,
+        vault.address as string,
+        0,
+        setDataVaultPayload,
+      ]);
+
+      // on execute call
+      const tx = await km?.connect(signer as Signer).execute(vaultExecutePayload, { gasLimit: 10000000 }); // <---- call the execute on key manager contract
+      const rcpt = await tx.wait();
+    } catch (error) {
+      console.log("error: ", error);
+      setChatMetaData({ ...chatMetaData, CHAT_STATUS: "START" });
+    }
+  };
+
+  const onEndChat: () => any = async () => {
+    await clearChat();
+
+    const reqData = {
+      address,
+      operationType: "END_CHAT",
+      users: chatMetaData.chatUsers,
+    };
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+      ...reqData,
+    });
+    console.log("connectedUserData: ", connectedUserData);
+  };
+
+  const onDeleteChat: () => any = async (): Promise<any> => {
+    await clearChat();
+
+    setChatMetaData({
+      ...chatMetaData,
+      activeChat: false,
+    });
+
+    const reqData = {
+      address,
+      operationType: "END_CHAT",
+      users: chatMetaData.chatUsers,
+    };
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+      ...reqData,
+    });
+  };
 
   // l-useeffect
   useEffect(() => {
+    const chatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
     if (signer && chatMetaData && chatMetaData["activeChat"] === true) {
       void loadContracts();
     }
-  }, [chatMetaData, signer]);
+  }, [signer]);
 
   // TO FOCUS ON LAST MESSAGE
   useEffect(() => {
     if (window) {
       window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
+
+      console.log("msg length", messagesData.length, messagesCount.current);
+      if (messagesData.length !== messagesCount.current) {
+        onMsgIncomingAlert(false);
+      }
+
+      messagesCount.current = messagesData.length;
     }
   }, [messagesData]);
 
@@ -347,7 +425,7 @@ const ChatView: NextPage<IChatView> = ({
           </div>
 
           {/* real time interaction alert */}
-          {isTyping && (
+          {isTyping === true && (
             <div className="text-center">
               <div className="animate-bounce">typing...</div>
             </div>
@@ -389,6 +467,19 @@ const ChatView: NextPage<IChatView> = ({
               </div>
             </div>
           )}
+
+          {/* on message end  */}
+
+          {chatMetaData && chatMetaData["CHAT_STATUS"] === "ENDING" && (
+            <>
+              <div className="flex flex-col items-center justify-center mt-44">
+                <div className="text-opacity-40 text-accent-content" id="LATEST_MESSAGE">
+                  Wait ending the chat...
+                </div>
+                <FallingLines color="#4fa94d" width="100" visible={true} />
+              </div>
+            </>
+          )}
         </div>
 
         {/* MESSAGE INPUT  */}
@@ -428,7 +519,7 @@ const ChatView: NextPage<IChatView> = ({
                 onKeyDown={(e): any =>
                   e.key === "Enter" && isMsgSending === false && Boolean(dynamicKey) && onSendMessage()
                 }
-                disabled={Boolean(dynamicKey) === false || isMsgSending === true}
+                disabled={isMsgSending === true}
                 onFocus={(): any => {
                   onTypingAlert(true);
                 }}

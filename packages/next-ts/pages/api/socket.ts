@@ -17,9 +17,10 @@ import account from "../../contracts/account.json";
 import { Vault__factory } from "../../contracts/contract-types";
 import { NextApiResponseWithSocket } from "../../types";
 
-const UP_ADDRESS = "0xcd49A709B9604Bc255A7e0Ef02735c265318a0DF";
-const VAULT_ADDRESS = "0x7944657574a5A22E2638B10fB638FfC5FcaE5b3D";
+const UP_ADDRESS = "0xCA02c0a711F001e46eedA986af63cdd5e1C7FC4B";
+const VAULT_ADDRESS = "0x026b6CD6EF957bb666b7687Ce2f83F6174424f29";
 const RPC_URL = "http://0.0.0.0:8545"; // local url
+// const RPC_URL = "https://rpc.l16.lukso.network";
 
 const web3provider = new Web3.providers.HttpProvider(RPC_URL);
 const provider = new ethers.providers.StaticJsonRpcProvider(RPC_URL);
@@ -77,6 +78,8 @@ async function LoadContracts(): Promise<void> {
 export default function handler(req: NextApiRequest, res: NextApiResponseWithSocket): any {
   if (res.socket.server.io) {
     console.log("Socket is already running");
+
+    void LoadContracts();
   } else {
     console.log("Socket is initializing");
     // @ts-ignore

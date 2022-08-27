@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import axios from "axios";
 import type { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import { BsPlusCircle } from "react-icons/bs";
 import { TiDeleteOutline } from "react-icons/ti";
+import { MutatingDots } from "react-loader-spinner";
 import { Socket } from "socket.io";
 import io from "socket.io-client";
-import { useAccount } from "wagmi";
+import { useAccount, useSigner } from "wagmi";
 
 import ChatView from "../components/Chat/ChatView";
 import { Sleep } from "../components/DebugContract/configs/utils";
@@ -27,8 +27,11 @@ const Home: NextPage = () => {
   const [mounted, setMounted] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [isMsgComing, setIsMsgComing] = useState(false);
+  const [isCreatingChat, setIsCreatingChat] = useState(false);
 
+  // l-wagmi hooks
   const { address, isConnected } = useAccount();
+  const { data: signer } = useSigner();
   // const { data } = useBalance({ addressOrName: address });
 
   // l-localStorages  states
@@ -45,7 +48,8 @@ const Home: NextPage = () => {
 
   // l-methods
   const onCreateChat: () => any = async (): Promise<any> => {
-    console.log("onStartChat: ", interests);
+    // console.log("onStartChat: ", interests);
+    setIsCreatingChat(true);
 
     // GRANT THE USER PERMISSION
     let response = await axios.get(`/api/grantPermission?address=${address}`);
@@ -62,19 +66,15 @@ const Home: NextPage = () => {
       VAULT_ADDRESS,
       CHAT_STATUS: "END",
     });
+
+    setIsCreatingChat(false);
   };
 
-  const onTest: () => any = () => {
+  const onTest: () => any = async (): Promise<any> => {
     console.log("onTest: ");
-    // const addrArray = [
-    //   "0x7cC872ADc952186D7E9C8C8575cb407cb4046230",
-    //   "0xDc33aB45de06754C667d438f1C975C3c45a986E1",
-    //   "0x0fAb64624733a7020D332203568754EB1a37DB89",
-    // ];
-    // // const result = addrArray.sort();
-    // const result = addrArray;
-    // console.log("result: ", result);
-    window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
+    // window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
+    const sign = await signer?.signMessage("cool man");
+    console.log("sign: ", sign);
   };
 
   const onDeleteChat: () => any = async (): Promise<any> => {
@@ -92,12 +92,12 @@ const Home: NextPage = () => {
     });
   };
 
-  const onAddInterest: () => any = async (): Promise<any> => {
+  const onAddInterest: () => any = (): any => {
     setInterests([...new Set([...interests, currentInterest])]);
     setCurrentInterest("");
   };
 
-  const onDeleteInterest: (arg: string) => any = async (toDeleteInterest): Promise<any> => {
+  const onDeleteInterest: (arg: string) => any = (toDeleteInterest): any => {
     const updatedInterestList = interests.filter((interestValue) => interestValue !== toDeleteInterest);
     setInterests(updatedInterestList);
   };
@@ -153,6 +153,7 @@ const Home: NextPage = () => {
 
   const onSocketListener: () => any = async () => {
     await axios.get("/api/socket");
+    //@ts-ignore
     socket = io();
 
     socket.on("connect", () => {
@@ -165,7 +166,7 @@ const Home: NextPage = () => {
     }
 
     socket.on("MATCH", (data) => {
-      console.log("data:match ", data);
+      // console.log("data:match ", data);
 
       const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
 
@@ -177,8 +178,8 @@ const Home: NextPage = () => {
         CHAT_STATUS: "START",
       });
 
-      const localChatMetaData1 = JSON.parse(localStorage.getItem("chatMetaData") as string);
-      console.log("localChatMetaData1: ", localChatMetaData1);
+      // const localChatMetaData1 = JSON.parse(localStorage.getItem("chatMetaData") as string);
+      // console.log("localChatMetaData1: ", localChatMetaData1);
     });
 
     socket.on("END_CHAT", (data) => {
@@ -196,16 +197,15 @@ const Home: NextPage = () => {
       });
     });
 
-    socket.on("TYPING_ALERT", async (typingStatus) => {
+    socket.on("TYPING_ALERT", (typingStatus) => {
       // console.log("typingStatus: ", typingStatus);
       setIsTyping(typingStatus as boolean);
 
-      await Sleep(400);
+      // await Sleep(400);
       window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
     });
 
     socket.on("MSG_INCOMING_ALERT", async (msgIncomingStatus) => {
-      // console.log("typingStatus: ", typingStatus);
       setIsMsgComing(msgIncomingStatus as boolean);
 
       await Sleep(400);
@@ -217,7 +217,7 @@ const Home: NextPage = () => {
     const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
     setChatMetaData({ ...localChatMetaData, CHAT_STATUS: "FINDING" });
 
-    await Sleep(2000);
+    await Sleep(100);
 
     const reqData = {
       address,
@@ -227,6 +227,13 @@ const Home: NextPage = () => {
     const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
       ...reqData,
     });
+
+    //  reset after certain time if user still finding
+    await Sleep(60000);
+    const localChatMetaData_updated = JSON.parse(localStorage.getItem("chatMetaData") as string);
+    if (localChatMetaData_updated && localChatMetaData_updated.CHAT_STATUS === "FINDING") {
+      setChatMetaData({ ...localChatMetaData, CHAT_STATUS: "END" });
+    }
   };
 
   const onStopChat: () => any = async () => {
@@ -300,7 +307,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <main className="flex  items-start justify-around h-[100%] ">
+      <main className="flex items-start justify-around h-[100%] ">
         {/* <button className="btn btn-primary" onClick={onTest}>
           Test
         </button> */}
@@ -330,7 +337,7 @@ const Home: NextPage = () => {
                   <React.Fragment key={index}>
                     <div className="m-1 cursor-pointer badge badge-info gap-2 rounded-xl">
                       {interest}
-                      <TiDeleteOutline onClick={(): any => onDeleteInterest(interest)} />
+                      <TiDeleteOutline onClick={(): any => onDeleteInterest(interest as string)} />
                     </div>
                   </React.Fragment>
                 ))}
@@ -342,6 +349,23 @@ const Home: NextPage = () => {
             </button>
 
             {/* <div className="m-1">{isFinding && <progress className="w-56 progress progress-primary" />}</div> */}
+
+            {isCreatingChat && (
+              <div className="flex flex-col justify-center m-1 ">
+                <div className="text-opacity-40 text-accent-content">Loading Chat...</div>
+                <MutatingDots
+                  height="100"
+                  width="100"
+                  color="#4fa94d"
+                  secondaryColor="#4fa94d"
+                  radius="12.5"
+                  ariaLabel="mutating-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  visible={true}
+                />
+              </div>
+            )}
           </div>
         )}
 
@@ -349,11 +373,11 @@ const Home: NextPage = () => {
         {chatMetaData && chatMetaData["activeChat"] === true && (
           <div className="w-[100%]">
             <ChatView
-              onDeleteChat={onDeleteChat}
+              // onDeleteChat={onDeleteChat}
               chatMetaData={chatMetaData}
               interests={interests}
               setChatMetaData={setChatMetaData}
-              onEndChat={onEndChat}
+              // onEndChat={onEndChat}
               onStartChat={onStartChat}
               onStopChat={onStopChat}
               onTypingAlert={onTypingAlert}

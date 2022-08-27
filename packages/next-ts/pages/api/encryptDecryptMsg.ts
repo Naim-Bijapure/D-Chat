@@ -33,16 +33,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponseW
       if (Array.isArray(encryptedData)) {
         const messagesData = await Promise.all(
           encryptedData.map(async (encryptedMsg): Promise<any> => {
-            const parsed = cipher.parse(encryptedMsg as string);
+            if (encryptedMsg !== "") {
+              const parsed = cipher.parse(encryptedMsg as string);
 
-            //     DECRYPTED MESSAGES
-            const decryptedData = await decryptWithPrivateKey(
-              account.privateKey, // privateKey
-              parsed
-            );
-            const finalParsedData = JSON.parse(decryptedData);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-            return finalParsedData;
+              //     DECRYPTED MESSAGES
+              const decryptedData = await decryptWithPrivateKey(
+                account.privateKey, // privateKey
+                parsed
+              );
+              const finalParsedData = JSON.parse(decryptedData);
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+              return finalParsedData;
+            }
           })
         );
 
