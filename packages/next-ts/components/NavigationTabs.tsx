@@ -8,7 +8,7 @@ import { VscDebugAll } from "react-icons/vsc";
  * add new tab here
  * ---------------------*/
 const navigationTabs = [
-  { tabName: "Personal Chat", pageName: "/", icon: <AiOutlineHome /> },
+  { tabName: "Random Chat", pageName: "/", icon: <AiOutlineHome /> },
   { tabName: "Group Chat", pageName: "/groupChat", icon: <BsViewList /> },
   // { tabName: "Debug Contracts", pageName: "/Debug", icon: <VscDebugAll /> },
   // { tabName: "Example UI", pageName: "/ExampleUI", icon: <BsViewList /> },

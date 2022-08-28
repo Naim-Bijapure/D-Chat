@@ -33,7 +33,7 @@ const Address = ({ address, price, isBalance, provider }: IAddress): any => {
 
       const formatedBalance = +formatEther(ethBalance.toString());
       setEthBalance(formatedBalance);
-      const usdBalance = formatedBalance * price;
+      const usdBalance = formatedBalance * Number(price);
       setUsdBalance(usdBalance);
     }
   };

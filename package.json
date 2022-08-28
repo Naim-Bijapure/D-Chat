@@ -18,7 +18,7 @@
     "contracts:rebuild": "yarn workspace @scaffold-eth/foundry-ts forge:clean && yarn contracts:build",
     "setup": "yarn install && yarn foundry:install && yarn forge:install",
     "chain": "yarn workspace @scaffold-eth/foundry-ts chain",
-    "deploy": "yarn forge:install && yarn workspace @scaffold-eth/foundry-ts forge:build && yarn workspace @scaffold-eth/next-ts contracts:build && yarn workspace  @scaffold-eth/foundry-ts forge:deploy",
+    "deploy": " yarn workspace @scaffold-eth/foundry-ts forge:build && yarn workspace @scaffold-eth/next-ts contracts:build && yarn workspace  @scaffold-eth/foundry-ts forge:deploy",
     "vercel:deploy": "yarn workspace @scaffold-eth/next-ts vercel:deploy",
     "fork": "yarn workspace @scaffold-eth/foundry fork",
     "test": "yarn workspace @scaffold-eth/foundry-ts test",
@@ -41,6 +41,7 @@
       "packages/common",
       "packages/next-ts",
       "packages/foundry-ts",
+      "@scaffold-eth/backend",
       "packages/*"
     ]
   },

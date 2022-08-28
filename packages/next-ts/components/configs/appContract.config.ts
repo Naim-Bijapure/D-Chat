@@ -61,7 +61,7 @@ export const targedChains = targetNetowrks([...TARGATED_CHAINS]);
 
 export const { chains, provider } = configureChains(
   [...targedChains, luksoChain],
-  // [alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }), publicProvider()]
+  // [luksoChain],
   [publicProvider()]
 ); // <---- configure your custom chain
 

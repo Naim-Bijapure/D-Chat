@@ -12,7 +12,7 @@
       "node_modules/@types",
       "src/helpers/definitions"
     ] /* List of folders to include type definitions from. */,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "module": "commonjs",
     "moduleResolution": "Node",
     "incremental": true,
