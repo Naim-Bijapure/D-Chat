@@ -41,6 +41,7 @@
       "packages/common",
       "packages/next-ts",
       "packages/foundry-ts",
+      "@scaffold-eth/backend",
       "packages/*"
     ]
   },
