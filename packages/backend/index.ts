@@ -66,6 +66,8 @@ async function LoadContracts(): Promise<void> {
         UP_ADDRESS,
         web3provider
     );
+
+    global.publicKey = publicKeyByPrivateKey(account.privateKey);
 }
 
 // socket.io
