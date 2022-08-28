@@ -74,7 +74,7 @@ async function grantPersmission(address): Promise<boolean> {
     /** ----------------------
      * set the call permission
      * ---------------------*/
-    const beneficiaryAddress = address; // EOA address of an exemplary person
+    const beneficiaryAddress = address; // EOA address of creator
     const beneficiaryPermissions = erc725?.encodePermissions({
       // ADDPERMISSIONS: true,
       CALL: true,

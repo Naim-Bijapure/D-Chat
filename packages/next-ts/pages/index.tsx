@@ -6,7 +6,6 @@ import ChatView from "../components/Chat/ChatView";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 const Home: NextPage = () => {
-  const [contractPurpose, setContractPurpose] = useState<string>("");
   // local storage states
   const [chatMetaData, setChatMetaData] = useLocalStorage("chatMetaData", {
     activeChat: false,
