@@ -11,13 +11,14 @@ import { useAccount, useSigner } from "wagmi";
 
 import ChatView from "../components/Chat/ChatView";
 import { Sleep } from "../components/DebugContract/configs/utils";
+import { BASE_URL } from "../constants";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { connectUserReponseType } from "../types";
 
 let socket: Socket;
 
 const Home: NextPage = () => {
-  const BASE_URL = window?.location.origin;
+  // const BASE_URL = window?.location.origin;
 
   // l-states
   // const [interests, setInterests] = useState<string[]>([]);
@@ -52,7 +53,7 @@ const Home: NextPage = () => {
     setIsCreatingChat(true);
 
     // GRANT THE USER PERMISSION
-    let response = await axios.get(`/api/grantPermission?address=${address}`);
+    let response = await axios.get(`${BASE_URL}/api/grantPermission?address=${address}`);
     response = await response.data;
     console.log("response: ", response);
 
@@ -87,7 +88,7 @@ const Home: NextPage = () => {
       operationType: "END_CHAT",
       users: chatMetaData.chatUsers,
     };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
   };
@@ -110,7 +111,7 @@ const Home: NextPage = () => {
       interests,
       operationType: "findUser",
     };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
     console.log("connectedUserData: ", connectedUserData);
@@ -152,9 +153,9 @@ const Home: NextPage = () => {
   };
 
   const onSocketListener: () => any = async () => {
-    await axios.get("/api/socket");
+    await axios.get(`${BASE_URL}/`);
     //@ts-ignore
-    socket = io();
+    socket = io(BASE_URL);
 
     socket.on("connect", () => {
       console.log("CONNECTED");
@@ -224,7 +225,7 @@ const Home: NextPage = () => {
       interests,
       operationType: "findUser",
     };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
 
@@ -242,7 +243,7 @@ const Home: NextPage = () => {
       operationType: "END_CHAT",
       users: [address],
     };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
     console.log("connectedUserData: ", connectedUserData);
@@ -254,7 +255,7 @@ const Home: NextPage = () => {
       operationType: "END_CHAT",
       users: chatMetaData.chatUsers,
     };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
     console.log("connectedUserData: ", connectedUserData);
@@ -267,7 +268,7 @@ const Home: NextPage = () => {
       users: chatMetaData.chatUsers,
       isFocus,
     };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
     // console.log("connectedUserData: ", connectedUserData);
@@ -280,7 +281,7 @@ const Home: NextPage = () => {
       users: chatMetaData.chatUsers,
       isFocus,
     };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
     // console.log("connectedUserData: ", connectedUserData);

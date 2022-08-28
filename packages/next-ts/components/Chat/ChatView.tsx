@@ -15,6 +15,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
 import { FallingLines, RotatingSquare, ThreeDots } from "react-loader-spinner";
 import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
+import { BASE_URL } from "../../constants";
 
 import { Vault, Vault__factory } from "../../contracts/contract-types";
 import { connectUserReponseType } from "../../types";
@@ -148,7 +149,7 @@ const ChatView: NextPage<IChatView> = ({
         };
 
         // get decrypted data from server
-        const { data: decryptedData } = await axios.post(`/api/encryptDecryptMsg`, {
+        const { data: decryptedData } = await axios.post(`${BASE_URL}/api/encryptDecryptMsg`, {
           ...reqData,
         });
 
@@ -170,7 +171,10 @@ const ChatView: NextPage<IChatView> = ({
 
     const users = [...chatMetaData["chatUsers"]];
 
+    console.log("dynamicKey: ", dynamicKey);
+
     const oldChatData = await vault["getData(bytes32)"](dynamicKey);
+    console.log("oldChatData: ", oldChatData);
 
     const vaultDecodedStringBefore = erc725?.decodeData({
       // @ts-ignore
@@ -195,7 +199,7 @@ const ChatView: NextPage<IChatView> = ({
     };
 
     // encrypt the data
-    const { data } = await axios.post(`/api/encryptDecryptMsg`, {
+    const { data } = await axios.post(`${BASE_URL}/api/encryptDecryptMsg`, {
       ...reqData,
     });
 
@@ -279,7 +283,7 @@ const ChatView: NextPage<IChatView> = ({
       operationType: "END_CHAT",
       users: chatMetaData.chatUsers,
     };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
     console.log("connectedUserData: ", connectedUserData);
@@ -298,7 +302,7 @@ const ChatView: NextPage<IChatView> = ({
       operationType: "END_CHAT",
       users: chatMetaData.chatUsers,
     };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`/api/connectUser`, {
+    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
   };
@@ -309,7 +313,7 @@ const ChatView: NextPage<IChatView> = ({
     if (signer && chatMetaData && chatMetaData["activeChat"] === true) {
       void loadContracts();
     }
-  }, [signer]);
+  }, [signer, chatMetaData]);
 
   // TO FOCUS ON LAST MESSAGE
   useEffect(() => {

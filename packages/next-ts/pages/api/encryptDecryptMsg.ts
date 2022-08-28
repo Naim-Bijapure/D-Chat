@@ -6,6 +6,7 @@ import account from "../../contracts/account.json";
 import { NextApiResponseWithSocket } from "../../types";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponseWithSocket): Promise<any> {
+
   const reqData = req.body;
   //   console.log("reqData: ", reqData);
 
