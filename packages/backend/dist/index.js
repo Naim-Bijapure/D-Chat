@@ -61,6 +61,7 @@ var LSP6KeyManager_json_2 = __importDefault(require("@lukso/lsp-smart-contracts/
 var UniversalProfile_json_1 = __importDefault(require("@lukso/lsp-smart-contracts/artifacts/UniversalProfile.json"));
 var ethers_1 = require("ethers");
 var web3_1 = __importDefault(require("web3"));
+var eth_crypto_1 = require("eth-crypto");
 var account_json_1 = __importDefault(require("./account.json"));
 var vault_json_1 = __importDefault(require("./vault.json"));
 var grantPermission_1 = __importDefault(require("./routes/grantPermission"));
@@ -111,6 +112,7 @@ function LoadContracts() {
                 case 2:
                     _d.apply(_c, _e.concat([_f.sent()]));
                     global.erc725 = new erc725_js_1["default"](__spreadArray(__spreadArray(__spreadArray(__spreadArray([], LSP3UniversalProfileMetadata_json_1["default"], true), LSP6KeyManager_json_1["default"], true), LSP10ReceivedVaults_json_1["default"], true), LSP9Vault_json_1["default"], true), constants_1.UP_ADDRESS, web3provider);
+                    global.publicKey = (0, eth_crypto_1.publicKeyByPrivateKey)(account_json_1["default"].privateKey);
                     return [2 /*return*/];
             }
         });
