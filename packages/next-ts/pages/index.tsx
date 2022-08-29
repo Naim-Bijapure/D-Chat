@@ -8,6 +8,7 @@ import { MutatingDots } from "react-loader-spinner";
 import { Socket } from "socket.io";
 import io from "socket.io-client";
 import { useAccount, useBalance, useSigner } from "wagmi";
+import Image from "next/image";
 
 import ChatView from "../components/Chat/ChatView";
 import { Sleep } from "../components/DebugContract/configs/utils";
@@ -316,7 +317,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <main className="flex items-start justify-around h-[100%] ">
+      <main className="flex flex-col items-start justify-around h-[100%] ">
         {/* <button className="btn btn-primary" onClick={onTest}>
           Test
         </button> */}
@@ -431,6 +432,14 @@ const Home: NextPage = () => {
                 <div>
                   <h3 className="font-bold">Please connect a wallet first!</h3>
                 </div>
+              </div>
+            </div>
+            <div className="m-2">
+              <div className="text-primary ">
+                If you are using Lukso UP browser extension use injected wallet to connect
+              </div>
+              <div>
+                <Image src={"/up_connect.png"} width={700} height={500} />
               </div>
             </div>
           </>
