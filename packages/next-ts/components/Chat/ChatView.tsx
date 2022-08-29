@@ -310,14 +310,16 @@ const ChatView: NextPage<IChatView> = ({
       await clearChat();
     }
 
-    const reqData = {
-      address,
-      operationType: "END_CHAT",
-      users: chatMetaData.chatUsers,
-    };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
-      ...reqData,
-    });
+    if (["START", "END"].includes(chatMetaData["CHAT_STATUS"] as string)) {
+      const reqData = {
+        address,
+        operationType: "END_CHAT",
+        users: chatMetaData.chatUsers,
+      };
+      const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
+        ...reqData,
+      });
+    }
 
     setChatMetaData({
       ...chatMetaData,
@@ -541,7 +543,7 @@ const ChatView: NextPage<IChatView> = ({
                 onKeyDown={(e): any =>
                   e.key === "Enter" && isMsgSending === false && Boolean(dynamicKey) && onSendMessage()
                 }
-                disabled={isMsgSending === true || chatMetaData["CHAT_STATUS"] === "END"}
+                disabled={isMsgSending === true || chatMetaData["CHAT_STATUS"] !== "START"}
                 onFocus={(): any => {
                   onTypingAlert(true);
                 }}
@@ -552,7 +554,7 @@ const ChatView: NextPage<IChatView> = ({
               <button
                 className="btn btn-primary  "
                 onClick={onSendMessage}
-                disabled={isMsgComing === true || isMsgSending === true || chatMetaData["CHAT_STATUS"] === "END"}>
+                disabled={isMsgComing === true || isMsgSending === true || chatMetaData["CHAT_STATUS"] !== "START"}>
                 <TbSend scale={100} />
               </button>
 

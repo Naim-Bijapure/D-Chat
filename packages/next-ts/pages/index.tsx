@@ -312,7 +312,7 @@ const Home: NextPage = () => {
       console.log("useEffect: socket initilizer");
       void onSocketListener();
     }
-  }, [mounted]);
+  }, [mounted, isConnected]);
 
   return (
     <>
