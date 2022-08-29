@@ -172,10 +172,10 @@ const ChatView: NextPage<IChatView> = ({
 
       const users = [...chatMetaData["chatUsers"]];
 
-      console.log("dynamicKey: ", dynamicKey);
+      // console.log("dynamicKey: ", dynamicKey);
 
       const oldChatData = await vault["getData(bytes32)"](dynamicKey);
-      console.log("oldChatData: ", oldChatData);
+      // console.log("oldChatData: ", oldChatData);
 
       const vaultDecodedStringBefore = erc725?.decodeData({
         // @ts-ignore
@@ -187,7 +187,7 @@ const ChatView: NextPage<IChatView> = ({
       let oldData = vaultDecodedStringBefore?.value !== null ? vaultDecodedStringBefore?.value : [];
       oldData = oldData.filter((msg) => Boolean(msg) === true);
 
-      console.log("oldData: ", oldData);
+      // console.log("oldData: ", oldData);
 
       const msgData = {
         address: address,

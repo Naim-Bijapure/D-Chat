@@ -8,10 +8,10 @@
     "serve": "nodemon index.ts",
     "tsc": "tsc",
     "start": "node dist/index.js",
-    "git:init": "git init",
     "git:remove": "rm -rf .git",
-    "deploy": "yarn git:init && git add . && git commit -m Heroku && git push heroku master && yarn git:remove",
+    "deploy": " git add . && git commit -m Heroku && git push heroku master ",
     "postinstall": "tsc"
+
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
