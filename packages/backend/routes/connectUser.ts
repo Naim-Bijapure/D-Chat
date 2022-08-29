@@ -9,10 +9,49 @@ const router = Router();
 const connectUsers: connectUsersType = {};
 
 router.post("/", async (req, res) => {
-  const reqData = req.body;
-  const userAddress = reqData.address;
-  const operationType = reqData.operationType;
-  console.log("reqData: ", reqData);
+	const reqData = req.body;
+	const userAddress = reqData.address;
+	const toAddress = reqData.toAddress; // Added for DirectChat
+	const operationType = reqData.operationType;
+	console.log("reqData: ", reqData);
+
+	/** ----------------------
+	* ON DIRECT CHAT
+	* ---------------------*/
+
+	if (operationType === "directChat") {
+		let matchedAdress = "0x";
+		connectUsers[userAddress] = {
+			status: "NO_MATCH",
+		};
+
+		const addresses = [toAddress, userAddress].sort();
+		connectUsers[userAddress].users = addresses;
+		matchedAdress = userAddress;
+
+		// create a dynamic uinque key
+		const dynamicKey = ERC725.encodeKeyName(KEY_NAME, [...addresses]);
+		connectUsers[userAddress].dynamicKey = dynamicKey;
+		connectUsers[userAddress].status = "MATCH";
+
+		if (connectUsers[matchedAdress]) {
+			const userData = connectUsers[matchedAdress];
+			console.log("userData: ", userData);
+			global.io.to(userData.users![0]).emit("MATCH", userData);
+			global.io.to(userData.users![1]).emit("MATCH", userData);
+
+			// emit the connected data
+			return res.status(200).json({
+				...connectUsers[matchedAdress],
+			});
+		}
+
+		if (connectUsers[matchedAdress] === undefined) {
+			return res.status(200).json({
+				...connectUsers[userAddress],
+			});
+		}
+	}
 
   /** ----------------------
    * ON FIND USER
