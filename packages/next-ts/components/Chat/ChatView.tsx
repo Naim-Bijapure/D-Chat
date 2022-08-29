@@ -122,7 +122,7 @@ const ChatView: NextPage<IChatView> = ({
   const loadMessages: () => any = () => {
     vault.on("DataChanged", async (dataKey) => {
       if (dynamicKey === dataKey) {
-        console.log("message data changed event  ");
+        // console.log("message data changed event  ");
 
         const users = [...chatMetaData["chatUsers"]];
 
@@ -162,78 +162,83 @@ const ChatView: NextPage<IChatView> = ({
   };
 
   const onSendMessage: () => any = async (): Promise<any> => {
-    onMsgIncomingAlert(true);
-    setIsMsgSending(true);
+    try {
+      onMsgIncomingAlert(true);
+      setIsMsgSending(true);
 
-    await Sleep(300);
-    // get focus on wait alert
-    window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
+      await Sleep(300);
+      // get focus on wait alert
+      window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
 
-    const users = [...chatMetaData["chatUsers"]];
+      const users = [...chatMetaData["chatUsers"]];
 
-    console.log("dynamicKey: ", dynamicKey);
+      console.log("dynamicKey: ", dynamicKey);
 
-    const oldChatData = await vault["getData(bytes32)"](dynamicKey);
-    console.log("oldChatData: ", oldChatData);
+      const oldChatData = await vault["getData(bytes32)"](dynamicKey);
+      console.log("oldChatData: ", oldChatData);
 
-    const vaultDecodedStringBefore = erc725?.decodeData({
+      const vaultDecodedStringBefore = erc725?.decodeData({
+        // @ts-ignore
+        keyName: KEY_NAME,
+        dynamicKeyParts: [...users],
+        value: oldChatData,
+      });
+
+      let oldData = vaultDecodedStringBefore?.value !== null ? vaultDecodedStringBefore?.value : [];
+      oldData = oldData.filter((msg) => Boolean(msg) === true);
+
+      console.log("oldData: ", oldData);
+
+      const msgData = {
+        address: address,
+        message: chatMessage,
+      };
+
+      const reqData = {
+        type: "ENCRYPT",
+        msgData,
+      };
+
+      // encrypt the data
+      const { data } = await axios.post(`${BASE_URL}/api/encryptDecryptMsg`, {
+        ...reqData,
+      });
+
+      const encryptedData = data.encryptedData;
+
+      const encodedChatData = erc725?.encodeData({
+        // @ts-ignore
+        keyName: KEY_NAME,
+        dynamicKeyParts: [...users],
+        // value: [...oldData, JSON.stringify(msgData)],
+        value: [...oldData, encryptedData],
+      });
+
       // @ts-ignore
-      keyName: KEY_NAME,
-      dynamicKeyParts: [...users],
-      value: oldChatData,
-    });
+      const setDataVaultPayload = vault.interface.encodeFunctionData("setData(bytes32[],bytes[])", [
+        encodedChatData?.keys,
+        encodedChatData?.values,
+      ]);
 
-    let oldData = vaultDecodedStringBefore?.value !== null ? vaultDecodedStringBefore?.value : [];
-    oldData = oldData.filter((msg) => Boolean(msg) === true);
-
-    console.log("oldData: ", oldData);
-
-    const msgData = {
-      address: address,
-      message: chatMessage,
-    };
-
-    const reqData = {
-      type: "ENCRYPT",
-      msgData,
-    };
-
-    // encrypt the data
-    const { data } = await axios.post(`${BASE_URL}/api/encryptDecryptMsg`, {
-      ...reqData,
-    });
-
-    const encryptedData = data.encryptedData;
-
-    const encodedChatData = erc725?.encodeData({
       // @ts-ignore
-      keyName: KEY_NAME,
-      dynamicKeyParts: [...users],
-      // value: [...oldData, JSON.stringify(msgData)],
-      value: [...oldData, encryptedData],
-    });
+      const vaultExecutePayload = vault.interface.encodeFunctionData("execute", [
+        0,
+        vault.address as string,
+        0,
+        setDataVaultPayload,
+      ]);
 
-    // @ts-ignore
-    const setDataVaultPayload = vault.interface.encodeFunctionData("setData(bytes32[],bytes[])", [
-      encodedChatData?.keys,
-      encodedChatData?.values,
-    ]);
+      // on execute call
+      const tx = await km?.connect(signer as Signer).execute(vaultExecutePayload, { gasLimit: 10000000 }); // <---- call the execute on key manager contract
+      const rcpt = await tx.wait();
 
-    // @ts-ignore
-    const vaultExecutePayload = vault.interface.encodeFunctionData("execute", [
-      0,
-      vault.address as string,
-      0,
-      setDataVaultPayload,
-    ]);
-
-    // on execute call
-    const tx = await km?.connect(signer as Signer).execute(vaultExecutePayload, { gasLimit: 10000000 }); // <---- call the execute on key manager contract
-    const rcpt = await tx.wait();
-
-    // onMsgIncomingAlert(false);
-    setIsMsgSending(false);
-    setChatMessage("");
+      // onMsgIncomingAlert(false);
+      setIsMsgSending(false);
+      setChatMessage("");
+    } catch (error) {
+      console.log("error: ", error);
+      window.location.reload();
+    }
   };
   const clearChat: () => any = async () => {
     try {
@@ -269,14 +274,41 @@ const ChatView: NextPage<IChatView> = ({
       // on execute call
       const tx = await km?.connect(signer as Signer).execute(vaultExecutePayload, { gasLimit: 10000000 }); // <---- call the execute on key manager contract
       const rcpt = await tx.wait();
+      return true;
     } catch (error) {
       console.log("error: ", error);
-      setChatMetaData({ ...chatMetaData, CHAT_STATUS: "START" });
+      return false;
     }
   };
 
   const onEndChat: () => any = async () => {
-    await clearChat();
+    try {
+      const isChatCleared = await clearChat();
+
+      if (isChatCleared) {
+        const reqData = {
+          address,
+          operationType: "END_CHAT",
+          users: chatMetaData.chatUsers,
+        };
+        const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
+          ...reqData,
+        });
+        console.log("connectedUserData: ", connectedUserData);
+      }
+
+      if (isChatCleared === false) {
+        setChatMetaData({ ...chatMetaData, CHAT_STATUS: "START" });
+      }
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
+  const onDeleteChat: () => any = async (): Promise<any> => {
+    if (chatMetaData["CHAT_STATUS"] === "START") {
+      await clearChat();
+    }
 
     const reqData = {
       address,
@@ -286,24 +318,10 @@ const ChatView: NextPage<IChatView> = ({
     const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
-    console.log("connectedUserData: ", connectedUserData);
-  };
-
-  const onDeleteChat: () => any = async (): Promise<any> => {
-    await clearChat();
 
     setChatMetaData({
       ...chatMetaData,
       activeChat: false,
-    });
-
-    const reqData = {
-      address,
-      operationType: "END_CHAT",
-      users: chatMetaData.chatUsers,
-    };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
-      ...reqData,
     });
   };
 
@@ -523,7 +541,7 @@ const ChatView: NextPage<IChatView> = ({
                 onKeyDown={(e): any =>
                   e.key === "Enter" && isMsgSending === false && Boolean(dynamicKey) && onSendMessage()
                 }
-                disabled={isMsgSending === true}
+                disabled={isMsgSending === true || chatMetaData["CHAT_STATUS"] === "END"}
                 onFocus={(): any => {
                   onTypingAlert(true);
                 }}
@@ -534,7 +552,7 @@ const ChatView: NextPage<IChatView> = ({
               <button
                 className="btn btn-primary  "
                 onClick={onSendMessage}
-                disabled={isMsgComing === true || isMsgSending === true}>
+                disabled={isMsgComing === true || isMsgSending === true || chatMetaData["CHAT_STATUS"] === "END"}>
                 <TbSend scale={100} />
               </button>
 

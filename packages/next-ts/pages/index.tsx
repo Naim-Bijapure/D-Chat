@@ -7,7 +7,7 @@ import { TiDeleteOutline } from "react-icons/ti";
 import { MutatingDots } from "react-loader-spinner";
 import { Socket } from "socket.io";
 import io from "socket.io-client";
-import { useAccount, useSigner } from "wagmi";
+import { useAccount, useBalance, useSigner } from "wagmi";
 
 import ChatView from "../components/Chat/ChatView";
 import { Sleep } from "../components/DebugContract/configs/utils";
@@ -33,6 +33,10 @@ const Home: NextPage = () => {
   // l-wagmi hooks
   const { address, isConnected } = useAccount();
   const { data: signer } = useSigner();
+  const { data: balance } = useBalance({
+    addressOrName: address,
+  });
+
   // const { data } = useBalance({ addressOrName: address });
 
   // l-localStorages  states
@@ -74,8 +78,12 @@ const Home: NextPage = () => {
   const onTest: () => any = async (): Promise<any> => {
     console.log("onTest: ");
     // window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
-    const sign = await signer?.signMessage("cool man");
-    console.log("sign: ", sign);
+    // const sign = await signer?.signMessage("cool man");
+    // console.log("sign: ", sign);
+
+    console.log("balance: ", balance?.value.toString());
+    // const addr = await signer?.getAddress();
+    // console.log('addr: ', addr);
   };
 
   const onDeleteChat: () => any = async (): Promise<any> => {
@@ -154,7 +162,7 @@ const Home: NextPage = () => {
 
   const onSocketListener: () => any = async () => {
     await axios.get(`${BASE_URL}/`);
-    //@ts-ignore
+    // @ts-ignore
     socket = io(BASE_URL);
 
     socket.on("connect", () => {
@@ -349,6 +357,21 @@ const Home: NextPage = () => {
               find random chat
             </button>
 
+            {balance?.value.toString() === "0" && (
+              <>
+                <div className="m-2 text-warning">
+                  <div>Look like you dont have LXYT tokens</div>
+                  <div>get some lukso faucet from here:</div>
+                  <a
+                    href="https://faucet.l16.lukso.network"
+                    target={"_blank"}
+                    rel="noreferrer"
+                    className="link-primary">
+                    https://faucet.l16.lukso.network
+                  </a>
+                </div>
+              </>
+            )}
             {/* <div className="m-1">{isFinding && <progress className="w-56 progress progress-primary" />}</div> */}
 
             {isCreatingChat && (
@@ -392,7 +415,24 @@ const Home: NextPage = () => {
         {/* TODO:ui improvements */}
         {isConnected === false && (
           <>
-            <div>please connect with app first</div>
+            <div className="m-2 shadow-lg alert">
+              <div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  className="flex-shrink-0 w-6 h-6 stroke-info">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                  <h3 className="font-bold">Please connect a wallet first!</h3>
+                </div>
+              </div>
+            </div>
           </>
         )}
 
