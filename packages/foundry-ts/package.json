@@ -36,7 +36,8 @@
     "generate-types": "typechain   --target=ethers-v5 'out/**/*.json' --out-dir=./generated/contract-types ",
     "foundry:install": "chmod +x foundry-init.mjs && zx foundry-init.mjs",
     "foundry:help": "chmod +x help.mjs && zx help.mjs",
-    "forge:temp-cleanup": "shx rm -rf out && forge build  && shx rm -rf out/**/*.metadata.json"
+    "forge:temp-cleanup-old": "shx rm -rf out && forge build  && shx rm -rf out/**/*.metadata.json",
+    "forge:temp-cleanup": "shx rm -rf out && forge build "
   },
   "dependencies": {
     "@atixlabs/hardhat-time-n-mine": "^0.0.5",
