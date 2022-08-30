@@ -1,5 +1,5 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
 // import moment from "moment";
 import http from "http";
 
@@ -10,21 +10,15 @@ import LSP6Schema from "@erc725/erc725.js/schemas/LSP6KeyManager.json";
 import LSP9Vault from "@erc725/erc725.js/schemas/LSP9Vault.json";
 import KeyManager from "@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json";
 import UniversalProfile from "@lukso/lsp-smart-contracts/artifacts/UniversalProfile.json";
+import { publicKeyByPrivateKey } from "eth-crypto";
 import { ethers } from "ethers";
-import { Server } from "socket.io";
 import Web3 from "web3";
-import {
-  cipher,
-  decryptWithPrivateKey,
-  encryptWithPublicKey,
-  publicKeyByPrivateKey,
-} from "eth-crypto";
 import account from "./account.json";
-import vault from "./vault.json";
-import grantPermission from "./routes/grantPermission";
-import { RPC_URL, VAULT_ADDRESS, UP_ADDRESS } from "./constants";
+import { RPC_URL, UP_ADDRESS, VAULT_ADDRESS } from "./constants";
 import connectUser from "./routes/connectUser";
 import encryptDecryptMsg from "./routes/encryptDecryptMsg";
+import grantPermission from "./routes/grantPermission";
+import vault from "./vault.json";
 
 const web3provider = new Web3.providers.HttpProvider(RPC_URL);
 const provider = new ethers.providers.StaticJsonRpcProvider(RPC_URL);

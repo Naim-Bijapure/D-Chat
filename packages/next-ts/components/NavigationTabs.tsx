@@ -1,21 +1,23 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { AiOutlineHome } from "react-icons/ai";
+import { FaRandom, FaRocketchat } from "react-icons/fa";
 import { BsViewList } from "react-icons/bs";
 import { VscDebugAll } from "react-icons/vsc";
 
 /** ----------------------
- * add new tab here
- * ---------------------*/
+* add new tab here
+* ---------------------*/
+
 const navigationTabs = [
-  { tabName: "Random Chat", pageName: "/", icon: <AiOutlineHome /> },
-  { tabName: "Group Chat", pageName: "/groupChat", icon: <BsViewList /> },
-  // { tabName: "Debug Contracts", pageName: "/Debug", icon: <VscDebugAll /> },
-  // { tabName: "Example UI", pageName: "/ExampleUI", icon: <BsViewList /> },
-  // { tabName: "Hints", pageName: "/Hints", icon: <AiOutlineBulb /> },
-  // { tabName: "Subgraph", pageName: "/Subgraph" },
-  // { tabName: "Mainnet Dai", pageName: "/MainnetDai" },
-  // { tabName: "Help", pageName: "/Help", icon: <AiOutlineInfoCircle /> },
+	{ tabName: "Random Chat", pageName: "/", icon: <FaRandom /> },
+	{ tabName: "Direct Chat", pageName: "/DirectChat", icon: <FaRocketchat /> },
+	// { tabName: "Group Chat", pageName: "/groupChat", icon: <BsViewList /> },
+	// { tabName: "Debug Contracts", pageName: "/Debug", icon: <VscDebugAll /> },
+	// { tabName: "Example UI", pageName: "/ExampleUI", icon: <BsViewList /> },
+	// { tabName: "Hints", pageName: "/Hints", icon: <AiOutlineBulb /> },
+	// { tabName: "Subgraph", pageName: "/Subgraph" },
+	// { tabName: "Mainnet Dai", pageName: "/MainnetDai" },
+	// { tabName: "Help", pageName: "/Help", icon: <AiOutlineInfoCircle /> },
 ];
 
 const NavigationTabs: React.FC = () => {
@@ -28,7 +30,7 @@ const NavigationTabs: React.FC = () => {
           {navigationTabs.map((tab) => {
             return (
               <li
-                className={`${pathname === tab.pageName ? "-bordered " : "tooltip-info"}`}
+                className={`${pathname === tab.pageName ? "bordered  " : "tooltip-info"}`}
                 data-tip={tab.tabName}
                 key={tab.tabName}>
                 <Link href={tab.pageName}>

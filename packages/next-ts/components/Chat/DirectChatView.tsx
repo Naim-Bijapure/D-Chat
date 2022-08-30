@@ -10,7 +10,6 @@ import axios from "axios";
 import { ContractInterface, ethers, Signer } from "ethers";
 import type { NextPage } from "next";
 import React, { useEffect, useRef, useState } from "react";
-// import { GrSend } from "react-icons/gr";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
 import { FallingLines, RotatingSquare, ThreeDots } from "react-loader-spinner";
@@ -20,6 +19,7 @@ import { BASE_URL } from "../../constants";
 import { Vault, Vault__factory } from "../../contracts/contract-types";
 import { connectUserReponseType } from "../../types";
 import { Sleep } from "../configs/utils";
+import Address from "../EthComponents/Address";
 import Blockie from "../EthComponents/Blockie";
 
 const KEY_NAME = "chat:<string>:<string>";
@@ -36,43 +36,29 @@ erc725schema.push(chatSchema);
 
 interface IChatView {
   chatMetaData: any;
-  interests: string[];
+  interests?: string[]; // optional
   isTyping: boolean;
   isMsgComing: boolean;
-  // onDeleteChat: () => any;
   setChatMetaData: (arg: any) => any;
-  // onEndChat: (arg: any) => any;
-  onStartChat: (arg: any) => any;
+  onStartChat?: (arg: any) => any;
   onStopChat: (arg: any) => any;
   onTypingAlert: (arg: any) => any;
   onMsgIncomingAlert: (arg: any) => any;
 }
 
-const ChatView: NextPage<IChatView> = ({
+const DirectChatView: NextPage<IChatView> = ({
   chatMetaData,
   isTyping,
-  interests,
   isMsgComing,
-  // onDeleteChat,
   setChatMetaData,
-  // onEndChat,
-  onStartChat,
-  onStopChat,
   onTypingAlert,
   onMsgIncomingAlert,
 }) => {
-  // const [chatMetaData, setChatMetaData] = useLocalStorage("chatMetaData", {
-  //   activeChat: false,
-  //   chatUsers: [],
-  //   UP_ADDRESS: "",
-  //   VAULT_ADDRESS: "",
-  // });
-
   // l-wagmi hooks
   const { address } = useAccount();
   const { data: signer } = useSigner();
-  // const { chain } = useNetwork();
-  // const provider = useProvider();
+  const { chain } = useNetwork();
+  const provider = useProvider();
 
   // l-states
   const [erc725, setErc725] = useState<ERC725>();
@@ -84,6 +70,7 @@ const ChatView: NextPage<IChatView> = ({
   const [messagesData, setMessagesData] = useState<any[]>([]);
   const [isFinding, setIsFinding] = useState<boolean>(false);
   const [isMsgSending, setIsMsgSending] = useState<boolean>(false);
+  const [fromAddress, setFromAddress] = useState<string>("");
 
   const messagesCount = useRef<number>(0);
 
@@ -168,10 +155,7 @@ const ChatView: NextPage<IChatView> = ({
 
       const users = [...chatMetaData["chatUsers"]];
 
-      // console.log("dynamicKey: ", dynamicKey);
-
       const oldChatData = await vault["getData(bytes32)"](dynamicKey);
-      // console.log("oldChatData: ", oldChatData);
 
       const vaultDecodedStringBefore = erc725?.decodeData({
         // @ts-ignore
@@ -231,6 +215,7 @@ const ChatView: NextPage<IChatView> = ({
       // onMsgIncomingAlert(false);
       setIsMsgSending(false);
       setChatMessage("");
+
       onTypingAlert(false);
     } catch (error) {
       console.log("error: ", error);
@@ -292,6 +277,8 @@ const ChatView: NextPage<IChatView> = ({
           ...reqData,
         });
         console.log("connectedUserData: ", connectedUserData);
+
+        setChatMetaData({ ...chatMetaData, activeChat: false });
       }
 
       if (isChatCleared === false) {
@@ -326,7 +313,7 @@ const ChatView: NextPage<IChatView> = ({
 
   // l-useeffect
   useEffect(() => {
-    const chatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
+    const chatMetaData = JSON.parse(localStorage.getItem("chatMetaDataDirect") as string);
     if (signer && chatMetaData && chatMetaData["activeChat"] === true) {
       void loadContracts();
     }
@@ -362,6 +349,13 @@ const ChatView: NextPage<IChatView> = ({
       // on start chat
       if (chatMetaData["CHAT_STATUS"] === "START") {
         setIsFinding(false);
+        if (address !== chatMetaData["chatUsers"][0]) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          setFromAddress(chatMetaData["chatUsers"][0]);
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+          setFromAddress(chatMetaData["chatUsers"][1]);
+        }
       }
 
       // on end chat
@@ -374,7 +368,14 @@ const ChatView: NextPage<IChatView> = ({
 
   return (
     <>
-      <div className="flex flex-col items-start justify-center h-[100%] rounded-xl ">
+      <div className="flex flex-col items-start justify-center h-[100%] ">
+        {/* <div className=""> */}
+        <div className="flex items-center justify-between w-1/2">
+          <div>You are chatting with:</div>{" "}
+          <div>
+            <Address address={fromAddress} isBalance={false} provider={provider} price={0} />
+          </div>
+        </div>
         {/* chat messages */}
         <div className="p-2 overflow-y-scroll rounded-lg bg-base-200 bg--gray-100 p--8 w-[80%] h-[80vh]">
           <div className="max-w-4xl mx-auto space-y--12 space-y-4 grid grid-cols-1  ">
@@ -383,7 +384,6 @@ const ChatView: NextPage<IChatView> = ({
                 return (
                   <React.Fragment key={index}>
                     {/* recepient message */}
-
                     <div
                       className={`text-left place-self-start ${data["address"] !== address ? "block" : "hidden"}`}
                       id={messagesData.length - 1 === index ? "LATEST_MESSAGE" : ""}
@@ -411,17 +411,6 @@ const ChatView: NextPage<IChatView> = ({
           <div className="h--[70vh] ">
             {messagesData && messagesData.length === 0 && (
               <div className="flex flex-col items-center justify-center">
-                {chatMetaData && chatMetaData["CHAT_STATUS"] === "END" && (
-                  <>
-                    <div>
-                      find new chat click on
-                      <button className="m-2 btn btn-accent btn-xs" onClick={onStartChat}>
-                        New
-                      </button>
-                    </div>
-                  </>
-                )}
-
                 {chatMetaData && chatMetaData["CHAT_STATUS"] === "FINDING" && (
                   <div>
                     <div className="opacity-100 mt-44 animate-pulse">Hold on looking for a chat....</div>
@@ -431,13 +420,6 @@ const ChatView: NextPage<IChatView> = ({
                         <progress className="w-56 progress progress-primary" />
                       )}
                     </div>
-                  </div>
-                )}
-
-                {chatMetaData && chatMetaData["CHAT_STATUS"] === "START" && (
-                  <div className="mt-44">
-                    <div className="">Found a match with common interest !!</div>
-                    <div className="">Say,hi 👋 to stranger.. </div>
                   </div>
                 )}
               </div>
@@ -506,22 +488,6 @@ const ChatView: NextPage<IChatView> = ({
         <div className="sticky bottom-0 z-50 w-[80%] ">
           <div className="form-control">
             <div className="input-group ">
-              {chatMetaData && chatMetaData["CHAT_STATUS"] === "FINDING" && (
-                <>
-                  <button className="btn btn-error  " onClick={onStopChat}>
-                    Stop
-                  </button>
-                </>
-              )}
-
-              {chatMetaData && chatMetaData["CHAT_STATUS"] === "END" && (
-                <>
-                  <button className="btn btn-accent  " onClick={onStartChat}>
-                    New
-                  </button>
-                </>
-              )}
-
               {chatMetaData && chatMetaData["CHAT_STATUS"] === "START" && (
                 <>
                   <button className="btn btn-warning  " onClick={onEndChat}>
@@ -565,4 +531,4 @@ const ChatView: NextPage<IChatView> = ({
   );
 };
 
-export default ChatView;
+export default DirectChatView;

@@ -176,8 +176,6 @@ const Home: NextPage = () => {
     }
 
     socket.on("MATCH", (data) => {
-      // console.log("data:match ", data);
-
       const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
 
       setChatMetaData({

@@ -10,7 +10,7 @@ module.exports = {
     themes: [
       {
         light: {
-          ...require("daisyui/src/colors/themes")["[data-theme=corporate]"],
+          ...require("daisyui/src/colors/themes")["[data-theme=fantasy]"],
         },
       },
       {
