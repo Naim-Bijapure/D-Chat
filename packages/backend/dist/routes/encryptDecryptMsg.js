@@ -46,13 +46,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 exports.__esModule = true;
 var express_1 = require("express");
 var eth_crypto_1 = require("eth-crypto");
-var account_json_1 = __importDefault(require("../account.json"));
+// import account from "../account.json";
 var router = (0, express_1.Router)();
 // define the home page route
 router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
@@ -84,7 +81,7 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                                 case 0:
                                     if (!(encryptedMsg !== "")) return [3 /*break*/, 2];
                                     parsed = eth_crypto_1.cipher.parse(encryptedMsg);
-                                    return [4 /*yield*/, (0, eth_crypto_1.decryptWithPrivateKey)(account_json_1["default"].privateKey, // privateKey
+                                    return [4 /*yield*/, (0, eth_crypto_1.decryptWithPrivateKey)(process.env.ACCOUNT_PRIVATE_KEY, // privateKey
                                         parsed)];
                                 case 1:
                                     decryptedData = _a.sent();
@@ -100,7 +97,7 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [2 /*return*/, res.status(200).json({ messagesData: messagesData })];
             case 5:
                 parsed = eth_crypto_1.cipher.parse(encryptedData);
-                return [4 /*yield*/, (0, eth_crypto_1.decryptWithPrivateKey)(account_json_1["default"].privateKey, // privateKey
+                return [4 /*yield*/, (0, eth_crypto_1.decryptWithPrivateKey)(process.env.ACCOUNT_PRIVATE_KEY, // privateKey
                     parsed)];
             case 6:
                 decryptedData = _a.sent();

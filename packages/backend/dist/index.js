@@ -48,8 +48,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-var express_1 = __importDefault(require("express"));
+require("dotenv").config();
 var cors_1 = __importDefault(require("cors"));
+var express_1 = __importDefault(require("express"));
 // import moment from "moment";
 var http_1 = __importDefault(require("http"));
 var erc725_js_1 = __importDefault(require("@erc725/erc725.js"));
@@ -59,18 +60,18 @@ var LSP6KeyManager_json_1 = __importDefault(require("@erc725/erc725.js/schemas/L
 var LSP9Vault_json_1 = __importDefault(require("@erc725/erc725.js/schemas/LSP9Vault.json"));
 var LSP6KeyManager_json_2 = __importDefault(require("@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json"));
 var UniversalProfile_json_1 = __importDefault(require("@lukso/lsp-smart-contracts/artifacts/UniversalProfile.json"));
+var eth_crypto_1 = require("eth-crypto");
 var ethers_1 = require("ethers");
 var web3_1 = __importDefault(require("web3"));
-var eth_crypto_1 = require("eth-crypto");
-var account_json_1 = __importDefault(require("./account.json"));
-var vault_json_1 = __importDefault(require("./vault.json"));
-var grantPermission_1 = __importDefault(require("./routes/grantPermission"));
+// import account from "./account.json";
 var constants_1 = require("./constants");
 var connectUser_1 = __importDefault(require("./routes/connectUser"));
 var encryptDecryptMsg_1 = __importDefault(require("./routes/encryptDecryptMsg"));
+var grantPermission_1 = __importDefault(require("./routes/grantPermission"));
+var vault_json_1 = __importDefault(require("./vault.json"));
 var web3provider = new web3_1["default"].providers.HttpProvider(constants_1.RPC_URL);
 var provider = new ethers_1.ethers.providers.StaticJsonRpcProvider(constants_1.RPC_URL);
-var walletSigner = new ethers_1.ethers.Wallet(account_json_1["default"].privateKey, provider); // <---- custom signer from EOA account
+var walletSigner = new ethers_1.ethers.Wallet(process.env.ACCOUNT_PRIVATE_KEY, provider); // <---- custom signer from EOA account
 global.RPC_URL = constants_1.RPC_URL;
 global.VAULT_ADDRESS = constants_1.VAULT_ADDRESS;
 global.UP_ADDRESS = constants_1.UP_ADDRESS;
@@ -87,6 +88,7 @@ global.io = io;
 app.use((0, cors_1["default"])({ origin: "*" }));
 app.use(express_1["default"].json());
 app.use(express_1["default"].urlencoded({ extended: true }));
+// console.log(process.env.ACCOUNT_ADDRESS);
 function LoadContracts() {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function () {
@@ -112,7 +114,7 @@ function LoadContracts() {
                 case 2:
                     _d.apply(_c, _e.concat([_f.sent()]));
                     global.erc725 = new erc725_js_1["default"](__spreadArray(__spreadArray(__spreadArray(__spreadArray([], LSP3UniversalProfileMetadata_json_1["default"], true), LSP6KeyManager_json_1["default"], true), LSP10ReceivedVaults_json_1["default"], true), LSP9Vault_json_1["default"], true), constants_1.UP_ADDRESS, web3provider);
-                    global.publicKey = (0, eth_crypto_1.publicKeyByPrivateKey)(account_json_1["default"].privateKey);
+                    global.publicKey = (0, eth_crypto_1.publicKeyByPrivateKey)(process.env.ACCOUNT_PRIVATE_KEY);
                     return [2 /*return*/];
             }
         });
@@ -154,6 +156,7 @@ app.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, func
 app.use("/api/grantPermission", grantPermission_1["default"]);
 app.use("/api/connectUser", connectUser_1["default"]);
 app.use("/api/encryptDecryptMsg", encryptDecryptMsg_1["default"]);
+// app.use("/api/fundAddress", encryptDecryptMsg);
 server.listen(port, "0.0.0.0", function () {
     console.log(" application is running on port ".concat(port, "."));
 });
@@ -161,7 +164,7 @@ server.listen(port, "0.0.0.0", function () {
 setInterval(function () {
     var https = require("https");
     var options = {
-        hostname: "https://domagle-backend.herokuapp.com",
+        hostname: "domagle-backend.herokuapp.com",
         path: "/test",
         method: "GET"
     };

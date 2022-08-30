@@ -65,12 +65,39 @@ var constants_1 = require("../constants");
 var router = (0, express_1.Router)();
 var connectUsers = {};
 router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var reqData, userAddress, operationType, interests_1, isInterestMatching, matchedAdress, addressKey, userData, addresses, dynamicKey, userData, users, users, isFocus, toSendAddress, users, isFocus, toSendAddress;
+    var reqData, userAddress, toAddress, operationType, matchedAdress, addresses, dynamicKey, userData, interests_1, isInterestMatching, matchedAdress, addressKey, userData, addresses, dynamicKey, userData, users, users, isFocus, toSendAddress, users, isFocus, toSendAddress;
     return __generator(this, function (_a) {
         reqData = req.body;
         userAddress = reqData.address;
+        toAddress = reqData.toAddress;
         operationType = reqData.operationType;
         console.log("reqData: ", reqData);
+        /** ----------------------
+         * ON DIRECT CHAT
+         * ---------------------*/
+        if (operationType === "directChat") {
+            matchedAdress = "0x";
+            connectUsers[userAddress] = {
+                status: "NO_MATCH"
+            };
+            addresses = [toAddress, userAddress].sort();
+            connectUsers[userAddress].users = addresses;
+            matchedAdress = userAddress;
+            dynamicKey = erc725_js_1["default"].encodeKeyName(constants_1.KEY_NAME, __spreadArray([], addresses, true));
+            connectUsers[userAddress].dynamicKey = dynamicKey;
+            connectUsers[userAddress].status = "MATCH";
+            if (connectUsers[matchedAdress]) {
+                userData = connectUsers[matchedAdress];
+                console.log("userData: ", userData);
+                global.io.to(userData.users[0]).emit("MATCH", userData);
+                global.io.to(userData.users[1]).emit("MATCH", userData);
+                // emit the connected data
+                return [2 /*return*/, res.status(200).json(__assign({}, connectUsers[matchedAdress]))];
+            }
+            if (connectUsers[matchedAdress] === undefined) {
+                return [2 /*return*/, res.status(200).json(__assign({}, connectUsers[userAddress]))];
+            }
+        }
         /** ----------------------
          * ON FIND USER
          * ---------------------*/
@@ -82,7 +109,9 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
             for (addressKey in connectUsers) {
                 if (addressKey !== userAddress) {
                     userData = connectUsers[addressKey];
-                    isInterestMatching = userData.interests.some(function (interest) { return interests_1.includes(interest); });
+                    isInterestMatching = userData.interests.some(function (interest) {
+                        return interests_1.includes(interest);
+                    });
                     if (isInterestMatching) {
                         addresses = [addressKey, userAddress].sort();
                         connectUsers[addressKey].users = addresses;
@@ -104,6 +133,9 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
             // global.connectUsers = connectUsers;
             if (connectUsers[matchedAdress]) {
                 userData = connectUsers[matchedAdress];
+                console.log("userData:MATCH ", userData);
+                console.log("userData.users![0]: ", userData.users[0]);
+                console.log("userData.users![1]: ", userData.users[1]);
                 global.io.to(userData.users[0]).emit("MATCH", userData);
                 global.io.to(userData.users[1]).emit("MATCH", userData);
                 // emit the connected data

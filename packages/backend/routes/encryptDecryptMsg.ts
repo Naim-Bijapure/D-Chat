@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { cipher, decryptWithPrivateKey, encryptWithPublicKey } from "eth-crypto";
-import account from "../account.json";
+// import account from "../account.json";
 
 const router = Router();
 
@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
 
                             //     DECRYPTED MESSAGES
                             const decryptedData = await decryptWithPrivateKey(
-                                account.privateKey, // privateKey
+                                process.env.ACCOUNT_PRIVATE_KEY, // privateKey
                                 parsed
                             );
                             const finalParsedData = JSON.parse(decryptedData);
@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
                 const parsed = cipher.parse(encryptedData as string);
                 //     decrypted messages
                 const decryptedData = await decryptWithPrivateKey(
-                    account.privateKey, // privateKey
+                    process.env.ACCOUNT_PRIVATE_KEY, // privateKey
                     parsed
                 );
 

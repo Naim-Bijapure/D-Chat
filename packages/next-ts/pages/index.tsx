@@ -30,6 +30,7 @@ const Home: NextPage = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [isMsgComing, setIsMsgComing] = useState(false);
   const [isCreatingChat, setIsCreatingChat] = useState(false);
+  const [sendFundStatus, setSendFundStatus] = useState("");
 
   // l-wagmi hooks
   const { address, isConnected } = useAccount();
@@ -87,19 +88,18 @@ const Home: NextPage = () => {
     // console.log('addr: ', addr);
   };
 
-  const onDeleteChat: () => any = async (): Promise<any> => {
-    setChatMetaData({
-      activeChat: false,
-    });
+  const sendFunds: () => any = async (): Promise<any> => {
+    let response: any = await axios.get(`${BASE_URL}/api/fundAddress/?address=${address}`);
+    response = await response.data;
+    console.log("response: ", response);
+    if (response.msg === "FUNDED") {
+      setSendFundStatus("funded !!");
+      window.location.reload();
+    }
 
-    const reqData = {
-      address,
-      operationType: "END_CHAT",
-      users: chatMetaData.chatUsers,
-    };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
-      ...reqData,
-    });
+    if (response.msg === "NOT_FUNDED") {
+      setSendFundStatus("not funded !!");
+    }
   };
 
   const onAddInterest: () => any = (): any => {
@@ -368,6 +368,18 @@ const Home: NextPage = () => {
                     className="link-primary">
                     https://faucet.l16.lukso.network
                   </a>
+                  <div className="text-primary">Or</div>
+                  <div className="text-success">get a quick fund to test (click below button)</div>
+                  <div>
+                    <button className="btn btn-secondary" onClick={sendFunds}>
+                      Get 2 lxyt
+                    </button>
+                  </div>
+                  {sendFundStatus && (
+                    <>
+                      <div>{sendFundStatus}</div>
+                    </>
+                  )}
                 </div>
               </>
             )}
