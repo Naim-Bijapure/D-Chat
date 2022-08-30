@@ -11,7 +11,7 @@ import { VscDebugAll } from "react-icons/vsc";
 const navigationTabs = [
 	{ tabName: "Random Chat", pageName: "/", icon: <FaRandom /> },
 	{ tabName: "Direct Chat", pageName: "/DirectChat", icon: <FaRocketchat /> },
-	{ tabName: "Group Chat", pageName: "/groupChat", icon: <BsViewList /> },
+	// { tabName: "Group Chat", pageName: "/groupChat", icon: <BsViewList /> },
 	// { tabName: "Debug Contracts", pageName: "/Debug", icon: <VscDebugAll /> },
 	// { tabName: "Example UI", pageName: "/ExampleUI", icon: <BsViewList /> },
 	// { tabName: "Hints", pageName: "/Hints", icon: <AiOutlineBulb /> },
@@ -30,7 +30,7 @@ const NavigationTabs: React.FC = () => {
           {navigationTabs.map((tab) => {
             return (
               <li
-                className={`${pathname === tab.pageName ? "-bordered " : "tooltip-info"}`}
+                className={`${pathname === tab.pageName ? "bordered  " : "tooltip-info"}`}
                 data-tip={tab.tabName}
                 key={tab.tabName}>
                 <Link href={tab.pageName}>

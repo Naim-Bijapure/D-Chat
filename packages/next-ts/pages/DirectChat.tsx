@@ -25,7 +25,7 @@ const DirectChat: NextPage = () => {
   const [isCreatingChat, setIsCreatingChat] = useState(false);
 
   const { address, isConnected } = useAccount();
-  const [ toAddress, setToAddress] = useLocalStorage("toAddress", "");
+  const [toAddress, setToAddress] = useLocalStorage("toAddress", "");
 
   // l-wagmi hooks
   const { data: signer } = useSigner();
@@ -34,7 +34,7 @@ const DirectChat: NextPage = () => {
   });
 
   // l-localStorages  states
-  const [chatMetaData, setChatMetaData] = useLocalStorage("chatMetaData", {
+  const [chatMetaDataDirect, setChatMetaDataDirect] = useLocalStorage("chatMetaDataDirect", {
     activeChat: false,
     chatUsers: [],
     UP_ADDRESS: "",
@@ -44,7 +44,6 @@ const DirectChat: NextPage = () => {
   });
 
   const onConnect: () => any = async (): Promise<any> => {
-
     let responseAddress = await axios.get(`${BASE_URL}/api/grantPermission?address=${address}`);
     responseAddress = await responseAddress.data;
     console.log("responseAddress: ", responseAddress);
@@ -52,31 +51,25 @@ const DirectChat: NextPage = () => {
     const UP_ADDRESS = responseAddress["UP_ADDRESS"];
     const VAULT_ADDRESS = responseAddress["VAULT_ADDRESS"];
 
-    setChatMetaData({
-      ...chatMetaData,
+    setChatMetaDataDirect({
+      ...chatMetaDataDirect,
       UP_ADDRESS,
       VAULT_ADDRESS,
-      CHAT_STATUS: "END",
     });
 
-    console.log("chatMetaData: ", chatMetaData);
-  }
-
-
+    // console.log("chatMetaData: ", chatMetaDataDirect);
+  };
 
   // l-methods
   const onCreateChat: () => any = async (): Promise<any> => {
     setIsCreatingChat(true);
     // console.log("onCreateChat: ", address, toAddress);
 
-    setChatMetaData({
-      ...chatMetaData,
+    setChatMetaDataDirect({
+      ...chatMetaDataDirect,
       activeChat: true,
       CHAT_STATUS: "END",
     });
-
-    // const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
-    // setChatMetaData({ ...localChatMetaData, CHAT_STATUS: "FINDING" });
 
     await Sleep(2000);
 
@@ -90,22 +83,6 @@ const DirectChat: NextPage = () => {
     });
 
     setIsCreatingChat(false);
-
-  };
-
-  const onDeleteChat: () => any = async (): Promise<any> => {
-    setChatMetaData({
-      activeChat: false,
-    });
-
-    const reqData = {
-      address,
-      operationType: "END_CHAT",
-      users: chatMetaData.chatUsers,
-    };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
-      ...reqData,
-    });
   };
 
   const onSocketListener: () => any = async () => {
@@ -123,11 +100,9 @@ const DirectChat: NextPage = () => {
     }
 
     socket.on("MATCH", (data) => {
-      console.log("data:match ", data);
+      const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaDataDirect") as string);
 
-      const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
-
-      setChatMetaData({
+      setChatMetaDataDirect({
         ...localChatMetaData,
         chatUsers: [...(data.users as string[])],
         activeChat: true,
@@ -135,17 +110,14 @@ const DirectChat: NextPage = () => {
         CHAT_STATUS: "START",
       });
 
-      const localChatMetaData1 = JSON.parse(localStorage.getItem("chatMetaData") as string);
+      const localChatMetaData1 = JSON.parse(localStorage.getItem("chatMetaDataDirect") as string);
       console.log("localChatMetaData1: ", localChatMetaData1);
     });
 
     socket.on("END_CHAT", (data) => {
-      // console.log('"END_CHAT": ', data);
-      // console.log("chatMetaData: ", chatMetaData);
+      const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaDataDirect") as string);
 
-      const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
-
-      setChatMetaData({
+      setChatMetaDataDirect({
         ...localChatMetaData,
         chatUsers: [],
         activeChat: true,
@@ -155,7 +127,7 @@ const DirectChat: NextPage = () => {
     });
 
     socket.on("TYPING_ALERT", (typingStatus) => {
-      console.log("typingStatus: ", typingStatus);
+      // console.log("typingStatus: ", typingStatus);
       setIsTyping(typingStatus as boolean);
     });
 
@@ -179,24 +151,12 @@ const DirectChat: NextPage = () => {
     console.log("connectedUserData: ", connectedUserData);
   };
 
-  const onEndChat: () => any = async () => {
-    const reqData = {
-      address,
-      operationType: "END_CHAT",
-      users: chatMetaData.chatUsers,
-    };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
-      ...reqData,
-    });
-    console.log("connectedUserData: ", connectedUserData);
-  };
-
   const onTypingAlert: (isFocus: boolean) => any = async (isFocus: boolean) => {
     console.log("isFocus: ", isFocus);
     const reqData = {
       address,
       operationType: "TYPING_ALERT",
-      users: chatMetaData.chatUsers,
+      users: chatMetaDataDirect.chatUsers,
       isFocus,
     };
     const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
@@ -209,20 +169,19 @@ const DirectChat: NextPage = () => {
     const reqData = {
       address,
       operationType: "MSG_INCOMING_ALERT",
-      users: chatMetaData.chatUsers,
+      users: chatMetaDataDirect.chatUsers,
       isFocus,
     };
     const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
-    // console.log("connectedUserData: ", connectedUserData);
   };
 
   // l-useEffects
   // check is connected or not then reset the local states
   useEffect(() => {
     if (isConnected === false) {
-      setChatMetaData({ activeChat: false });
+      setChatMetaDataDirect({ activeChat: false });
     }
 
     // join the user address room
@@ -241,7 +200,7 @@ const DirectChat: NextPage = () => {
   return (
     <>
       <main className="flex flex-col items-start justify-around h-[100%]">
-        {chatMetaData && chatMetaData["activeChat"] === false && isConnected === true && (
+        {chatMetaDataDirect && chatMetaDataDirect["activeChat"] === false && isConnected === true && (
           <div className="flex flex-col items-start self-center mt-8 w-[40%]">
             {/* toAddress input */}
             <div className="m-1 form-control">
@@ -266,11 +225,7 @@ const DirectChat: NextPage = () => {
             <div className="m-2 text-warning">
               <div>Look like you dont have LXYT tokens</div>
               <div>get some lukso faucet from here:</div>
-              <a
-                href="https://faucet.l16.lukso.network"
-                target={"_blank"}
-                rel="noreferrer"
-                className="link-primary">
+              <a href="https://faucet.l16.lukso.network" target={"_blank"} rel="noreferrer" className="link-primary">
                 https://faucet.l16.lukso.network
               </a>
             </div>
@@ -295,13 +250,11 @@ const DirectChat: NextPage = () => {
         )}
 
         {/* ON ACTIVE CHAT */}
-        {chatMetaData && chatMetaData["activeChat"] === true && (
+        {chatMetaDataDirect && chatMetaDataDirect["activeChat"] === true && (
           <div className="w-[100%]">
             <DirectChatView
-              // onDeleteChat={onDeleteChat}
-              // onEndChat={onEndChat}
-              chatMetaData={chatMetaData}
-              setChatMetaData={setChatMetaData}
+              chatMetaData={chatMetaDataDirect}
+              setChatMetaData={setChatMetaDataDirect}
               onStopChat={onStopChat}
               onTypingAlert={onTypingAlert}
               isTyping={isTyping}

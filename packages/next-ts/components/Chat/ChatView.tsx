@@ -15,18 +15,14 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
 import { FallingLines, RotatingSquare, ThreeDots } from "react-loader-spinner";
 import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
-import { BASE_URL } from "../../constants";
 
+import { BASE_URL } from "../../constants";
 import { Vault, Vault__factory } from "../../contracts/contract-types";
 import { connectUserReponseType } from "../../types";
 import { Sleep } from "../configs/utils";
 import Blockie from "../EthComponents/Blockie";
 
 const KEY_NAME = "chat:<string>:<string>";
-
-const IPFS_GATEWAY = "https://2eff.lukso.dev/ipfs/";
-
-const config = { ipfsGateway: IPFS_GATEWAY };
 
 const chatSchema = {
   name: "chat:<string>:<string>",
@@ -75,8 +71,8 @@ const ChatView: NextPage<IChatView> = ({
   // l-wagmi hooks
   const { address } = useAccount();
   const { data: signer } = useSigner();
-  const { chain } = useNetwork();
-  const provider = useProvider();
+  // const { chain } = useNetwork();
+  // const provider = useProvider();
 
   // l-states
   const [erc725, setErc725] = useState<ERC725>();
@@ -235,6 +231,7 @@ const ChatView: NextPage<IChatView> = ({
       // onMsgIncomingAlert(false);
       setIsMsgSending(false);
       setChatMessage("");
+      onTypingAlert(false);
     } catch (error) {
       console.log("error: ", error);
       window.location.reload();
@@ -377,10 +374,9 @@ const ChatView: NextPage<IChatView> = ({
 
   return (
     <>
-      <div className="flex flex-col items-start justify-center h-[100%] ">
-        {/* <div className=""> */}
+      <div className="flex flex-col items-start justify-center h-[100%] rounded-xl ">
         {/* chat messages */}
-        <div className="p-2 overflow-y-scroll bg-base-200 bg--gray-100 p--8 w-[80%] h-[80vh] ">
+        <div className="p-2 overflow-y-scroll rounded-lg bg-base-200 bg--gray-100 p--8 w-[80%] h-[80vh]">
           <div className="max-w-4xl mx-auto space-y--12 space-y-4 grid grid-cols-1  ">
             {messagesData &&
               messagesData?.map((data, index) => {

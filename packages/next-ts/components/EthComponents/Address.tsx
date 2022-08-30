@@ -38,7 +38,9 @@ const Address = ({ address, price, isBalance, provider }: IAddress): any => {
     }
   };
   useEffect(() => {
-    void loadBalance();
+    if (price) {
+      void loadBalance();
+    }
   }, [price]);
 
   return (
