@@ -3,8 +3,11 @@
 
 ## Talk to Strangers in a Decentralized way on Lukso Network
 
-LIVE DEMO: https://lukso-chat-naimbijapure7407.vercel.app
-Youtube video: https://youtu.be/vHEhkRqQcdU
+###### LIVE DEMO: https://lukso-chat-naimbijapure7407.vercel.app
+
+###### Youtube video: https://youtu.be/vHEhkRqQcdU
+
+-----
 
 > Start random chats with strangers based on interests, and create direct chats with someone you know from a simple interface! 🚀
 
