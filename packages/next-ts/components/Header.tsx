@@ -1,6 +1,5 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-import NavigationTabs from "./NavigationTabs";
 import ThemeSwitch from "./ThemeSwitch";
 
 const Header: React.FC = () => {
@@ -9,16 +8,16 @@ const Header: React.FC = () => {
       <div className="sticky top-0 z-50 flex flex-col items-start ">
         <div className="navbar bg-base-100  shadow-sm">
           <div className="navbar-start">
-            <a className="text-sm normal-case btn btn-ghost lg:text-xl">DOmagle Chat</a>
-            {/* <ul className="p-0 menu menu-horizontal">
-              <li>
-                <a>Personal Chat</a>
-              </li>
-
-              <li>
-                <a>Group Chat</a>
-              </li>
-            </ul> */}
+            <a className="text-sm normal-case btn btn-ghost lg:text-xl">
+              <span className="m-2 text-primary">DOmagle Chat</span>
+              <a
+                href="https://github.com/Naim-Bijapure/scaffold-eth-next"
+                target={"_blank"}
+                className="text-xs  link link-secondary"
+                rel="noreferrer">
+                (built with scaffold-eth-next-2.0 )
+              </a>
+            </a>
           </div>
 
           <div className="hidden navbar-center lg:flex"></div>
