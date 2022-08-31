@@ -13,7 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 // import { GrSend } from "react-icons/gr";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
-import { FallingLines, RotatingSquare, ThreeDots } from "react-loader-spinner";
+import { FallingLines, RotatingSquare, ThreeDots, Comment } from "react-loader-spinner";
 import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
 
 import { BASE_URL } from "../../constants";
@@ -472,15 +472,15 @@ const ChatView: NextPage<IChatView> = ({
           {/* on incoming messag alert */}
           {isMsgComing === true && (
             <div className="flex flex-col items-center justify-center">
-              <ThreeDots
-                height="30"
-                width="60"
-                radius="10"
-                // color="#4fa94d"
-                ariaLabel="three-dots-loading"
-                wrapperStyle={{}}
-                wrapperClass="flex justify-center "
+              <Comment
                 visible={true}
+                height="80"
+                width="80"
+                ariaLabel="comment-loading"
+                wrapperStyle={{}}
+                wrapperClass="comment-wrapper"
+                color="#fff"
+                backgroundColor="#F4442E"
               />
               <div className="text-opacity-40 text-accent-content" id="LATEST_MESSAGE">
                 Wait incoming message...

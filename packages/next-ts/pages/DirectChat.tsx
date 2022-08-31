@@ -199,7 +199,7 @@ const DirectChat: NextPage = () => {
 
   return (
     <>
-      <main className="flex flex-col items-start justify-around h-[100%]">
+      <main className="flex flex-col items-center justify-around h-[100%]">
         {chatMetaDataDirect && chatMetaDataDirect["activeChat"] === false && isConnected === true && (
           <div className="flex flex-col items-start self-center mt-8 w-[40%]">
             {/* toAddress input */}
@@ -250,7 +250,7 @@ const DirectChat: NextPage = () => {
         )}
 
         {/* ON ACTIVE CHAT */}
-        {chatMetaDataDirect && chatMetaDataDirect["activeChat"] === true && (
+        {chatMetaDataDirect && chatMetaDataDirect["activeChat"] === true && isCreatingChat === false && (
           <div className="w-[100%]">
             <DirectChatView
               chatMetaData={chatMetaDataDirect}

@@ -40,7 +40,7 @@
     "react-dom": "18.1.0",
     "react-hook-form": "^7.33.1",
     "react-icons": "^4.4.0",
-    "react-loader-spinner": "^5.2.0",
+    "react-loader-spinner": "^5.3.3",
     "react-toastify": "^9.0.4",
     "remove": "^0.1.5",
     "sass": "^1.52.2",

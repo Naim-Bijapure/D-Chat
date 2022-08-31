@@ -12,7 +12,7 @@ import type { NextPage } from "next";
 import React, { useEffect, useRef, useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
-import { FallingLines, RotatingSquare, ThreeDots } from "react-loader-spinner";
+import { FallingLines, RotatingSquare, ThreeDots, Comment } from "react-loader-spinner";
 import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
 
 import { BASE_URL } from "../../constants";
@@ -370,6 +370,8 @@ const DirectChatView: NextPage<IChatView> = ({
     <>
       <div className="flex flex-col items-start justify-center h-[100%] ">
         {/* <div className=""> */}
+
+        <div className="text-xs text-accent">If tx gets slow please supply more gas {"fee's"}</div>
         <div className="flex items-center justify-between w-1/2">
           <div>You are chatting with:</div>{" "}
           <div>
@@ -454,15 +456,15 @@ const DirectChatView: NextPage<IChatView> = ({
           {/* on incoming messag alert */}
           {isMsgComing === true && (
             <div className="flex flex-col items-center justify-center">
-              <ThreeDots
-                height="30"
-                width="60"
-                radius="10"
-                // color="#4fa94d"
-                ariaLabel="three-dots-loading"
-                wrapperStyle={{}}
-                wrapperClass="flex justify-center "
+              <Comment
                 visible={true}
+                height="80"
+                width="80"
+                ariaLabel="comment-loading"
+                wrapperStyle={{}}
+                wrapperClass="comment-wrapper"
+                color="#fff"
+                backgroundColor="#F4442E"
               />
               <div className="text-opacity-40 text-accent-content" id="LATEST_MESSAGE">
                 Wait incoming message...

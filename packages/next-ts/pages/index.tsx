@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import React, { useEffect, useState } from "react";
 import { BsPlusCircle } from "react-icons/bs";
 import { TiDeleteOutline } from "react-icons/ti";
-import { MutatingDots } from "react-loader-spinner";
+import { MutatingDots, Watch } from "react-loader-spinner";
 import { Socket } from "socket.io";
 import io from "socket.io-client";
 import { useAccount, useBalance, useSigner } from "wagmi";
@@ -31,6 +31,7 @@ const Home: NextPage = () => {
   const [isMsgComing, setIsMsgComing] = useState(false);
   const [isCreatingChat, setIsCreatingChat] = useState(false);
   const [sendFundStatus, setSendFundStatus] = useState("");
+  const [isSendingFunds, setIsSendingFunds] = useState(false);
 
   // l-wagmi hooks
   const { address, isConnected } = useAccount();
@@ -89,6 +90,8 @@ const Home: NextPage = () => {
   };
 
   const sendFunds: () => any = async (): Promise<any> => {
+    setIsSendingFunds(true);
+    await Sleep(2000);
     let response: any = await axios.get(`${BASE_URL}/api/fundAddress/?address=${address}`);
     response = await response.data;
     console.log("response: ", response);
@@ -100,6 +103,8 @@ const Home: NextPage = () => {
     if (response.msg === "NOT_FUNDED") {
       setSendFundStatus("not funded !!");
     }
+
+    setIsSendingFunds(false);
   };
 
   const onAddInterest: () => any = (): any => {
@@ -110,55 +115,6 @@ const Home: NextPage = () => {
   const onDeleteInterest: (arg: string) => any = (toDeleteInterest): any => {
     const updatedInterestList = interests.filter((interestValue) => interestValue !== toDeleteInterest);
     setInterests(updatedInterestList);
-  };
-
-  const findMatch: () => any = async (): Promise<any> => {
-    console.log("findMatch:... ");
-    //  CONNECT USER API
-    const reqData = {
-      address,
-      interests,
-      operationType: "findUser",
-    };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
-      ...reqData,
-    });
-    console.log("connectedUserData: ", connectedUserData);
-    console.log("isFinding: ", isFinding);
-    if (connectedUserData.status === "MATCH" && isFinding === true) {
-      setIsFinding(false);
-
-      // // GRANT THE USER PERMISSION
-      // let response = await fetch(`${BASE_URL}/api/grantPermission?address=${address}`);
-      // response = await response.json();
-      // console.log("response: ", response);
-
-      // const UP_ADDRESS = response["UP_ADDRESS"];
-      // const VAULT_ADDRESS = response["VAULT_ADDRESS"];
-      // // TEMP CONNECT USER API (MAKE IT DYNAMIMC WITH RANDOMLY USER CONNECTION)
-      // const dynamicKey = connectedUserData.dynamicKey;
-
-      // setChatMetaData({
-      //   ...chatMetaData,
-      //   chatUsers: [...(connectedUserData.users as string[])],
-      //   activeChat: true,
-      //   UP_ADDRESS,
-      //   VAULT_ADDRESS,
-      //   dynamicKey,
-      // });
-
-      const dynamicKey = connectedUserData.dynamicKey;
-      setChatMetaData({
-        ...chatMetaData,
-        chatUsers: [...(connectedUserData.users as string[])],
-        activeChat: true,
-        DYNAMIC_KEY: dynamicKey,
-      });
-    }
-
-    setTimeout(() => {
-      setFetchToggler((preVal) => !preVal);
-    }, 2000);
   };
 
   const onSocketListener: () => any = async () => {
@@ -319,6 +275,7 @@ const Home: NextPage = () => {
         {/* <button className="btn btn-primary" onClick={onTest}>
           Test
         </button> */}
+        <div className="text-xs text-accent">If tx gets slow please supply more gas {"fee's"}</div>
 
         {chatMetaData && chatMetaData["activeChat"] === false && isConnected === true && (
           <div className="flex flex-col items-start self-center mt-8 w-[40%]">
@@ -352,7 +309,10 @@ const Home: NextPage = () => {
             </div>
 
             {/* find button */}
-            <button className="m-1 btn btn-accent " onClick={onCreateChat} disabled={interests.length === 0}>
+            <button
+              className="m-1 btn btn-accent "
+              onClick={onCreateChat}
+              disabled={interests.length === 0 || balance?.value.toString() === "0"}>
               find random chat
             </button>
 
@@ -379,6 +339,19 @@ const Home: NextPage = () => {
                     <>
                       <div>{sendFundStatus}</div>
                     </>
+                  )}
+                  {isSendingFunds && (
+                    <div className="m-2">
+                      <Watch
+                        height="80"
+                        width="80"
+                        radius="48"
+                        color="#4fa94d"
+                        ariaLabel="watch-loading"
+                        wrapperStyle={{}}
+                        visible={true}
+                      />
+                    </div>
                   )}
                 </div>
               </>
