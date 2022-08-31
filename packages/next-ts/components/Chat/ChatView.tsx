@@ -13,8 +13,8 @@ import React, { useEffect, useRef, useState } from "react";
 // import { GrSend } from "react-icons/gr";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
-import { FallingLines, RotatingSquare, ThreeDots, Comment } from "react-loader-spinner";
-import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
+import { Comment, FallingLines, RotatingSquare } from "react-loader-spinner";
+import { useAccount, useSigner } from "wagmi";
 
 import { BASE_URL } from "../../constants";
 import { Vault, Vault__factory } from "../../contracts/contract-types";
@@ -39,9 +39,7 @@ interface IChatView {
   interests: string[];
   isTyping: boolean;
   isMsgComing: boolean;
-  // onDeleteChat: () => any;
   setChatMetaData: (arg: any) => any;
-  // onEndChat: (arg: any) => any;
   onStartChat: (arg: any) => any;
   onStopChat: (arg: any) => any;
   onTypingAlert: (arg: any) => any;
@@ -51,28 +49,16 @@ interface IChatView {
 const ChatView: NextPage<IChatView> = ({
   chatMetaData,
   isTyping,
-  interests,
   isMsgComing,
-  // onDeleteChat,
   setChatMetaData,
-  // onEndChat,
   onStartChat,
   onStopChat,
   onTypingAlert,
   onMsgIncomingAlert,
 }) => {
-  // const [chatMetaData, setChatMetaData] = useLocalStorage("chatMetaData", {
-  //   activeChat: false,
-  //   chatUsers: [],
-  //   UP_ADDRESS: "",
-  //   VAULT_ADDRESS: "",
-  // });
-
   // l-wagmi hooks
   const { address } = useAccount();
   const { data: signer } = useSigner();
-  // const { chain } = useNetwork();
-  // const provider = useProvider();
 
   // l-states
   const [erc725, setErc725] = useState<ERC725>();
@@ -101,10 +87,8 @@ const ChatView: NextPage<IChatView> = ({
     const vault: Vault = new ethers.Contract(VAULT_ADDRESS as string, Vault__factory.abi as ContractInterface, signer);
     // contracts
     const up = new ethers.Contract(UP_ADDRESS as string, UniversalProfile.abi, signer as Signer);
-    console.log("myUP: ", up);
 
     const ownerUP = await up?.owner(); // <---- get owner of UP contract
-    console.log("ownerUP: ", ownerUP);
 
     const km = new ethers.Contract(ownerUP as string, KeyManager.abi, signer as Signer);
 
@@ -118,7 +102,7 @@ const ChatView: NextPage<IChatView> = ({
   const loadMessages: () => any = () => {
     vault.on("DataChanged", async (dataKey) => {
       if (dynamicKey === dataKey) {
-        // console.log("message data changed event  ");
+        //
 
         const users = [...chatMetaData["chatUsers"]];
 
@@ -132,7 +116,7 @@ const ChatView: NextPage<IChatView> = ({
         });
 
         const oldValues = vaultDecodedStringBefore?.value !== null ? vaultDecodedStringBefore?.value : [];
-        // console.log("load messages oldValues: ", oldValues);
+        //
         const messages: any[] = [];
         if (Array.isArray(oldValues)) {
           // oldValues.map((msg: string) => messages.push(JSON.parse(msg)));
@@ -151,12 +135,14 @@ const ChatView: NextPage<IChatView> = ({
 
         if (messages.length !== messagesCount.current) {
           setMessagesData(decryptedData.messagesData as []);
-          // onMsgIncomingAlert(false);
         }
       }
     });
   };
 
+  /** ----------------------
+   * on send message with lukso protocal
+   * ---------------------*/
   const onSendMessage: () => any = async (): Promise<any> => {
     try {
       onMsgIncomingAlert(true);
@@ -168,10 +154,8 @@ const ChatView: NextPage<IChatView> = ({
 
       const users = [...chatMetaData["chatUsers"]];
 
-      // console.log("dynamicKey: ", dynamicKey);
-
       const oldChatData = await vault["getData(bytes32)"](dynamicKey);
-      // console.log("oldChatData: ", oldChatData);
+      //
 
       const vaultDecodedStringBefore = erc725?.decodeData({
         // @ts-ignore
@@ -183,7 +167,7 @@ const ChatView: NextPage<IChatView> = ({
       let oldData = vaultDecodedStringBefore?.value !== null ? vaultDecodedStringBefore?.value : [];
       oldData = oldData.filter((msg) => Boolean(msg) === true);
 
-      // console.log("oldData: ", oldData);
+      //
 
       const msgData = {
         address: address,
@@ -228,15 +212,16 @@ const ChatView: NextPage<IChatView> = ({
       const tx = await km?.connect(signer as Signer).execute(vaultExecutePayload, { gasLimit: 10000000 }); // <---- call the execute on key manager contract
       const rcpt = await tx.wait();
 
-      // onMsgIncomingAlert(false);
       setIsMsgSending(false);
       setChatMessage("");
       onTypingAlert(false);
     } catch (error) {
-      console.log("error: ", error);
       window.location.reload();
     }
   };
+  /** ----------------------
+   * clear the on chain data on end chat
+   * ---------------------*/
   const clearChat: () => any = async () => {
     try {
       const users = [...chatMetaData["chatUsers"]];
@@ -273,7 +258,6 @@ const ChatView: NextPage<IChatView> = ({
       const rcpt = await tx.wait();
       return true;
     } catch (error) {
-      console.log("error: ", error);
       return false;
     }
   };
@@ -291,15 +275,12 @@ const ChatView: NextPage<IChatView> = ({
         const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
           ...reqData,
         });
-        console.log("connectedUserData: ", connectedUserData);
       }
 
       if (isChatCleared === false) {
         setChatMetaData({ ...chatMetaData, CHAT_STATUS: "START" });
       }
-    } catch (error) {
-      console.log("error: ", error);
-    }
+    } catch (error) {}
   };
 
   const onDeleteChat: () => any = async (): Promise<any> => {
@@ -337,7 +318,6 @@ const ChatView: NextPage<IChatView> = ({
     if (window) {
       window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
 
-      console.log("msg length", messagesData.length, messagesCount.current);
       if (messagesData.length !== messagesCount.current) {
         onMsgIncomingAlert(false);
       }

@@ -1,7 +1,6 @@
 import ERC725 from "@erc725/erc725.js";
-import { ethers, Signer } from "ethers";
 import { Router } from "express";
-import { KEY_NAME, UP_ADDRESS, VAULT_ADDRESS } from "../constants";
+import { KEY_NAME } from "../constants";
 import { connectUsersType } from "../types";
 
 const router = Router();
@@ -13,7 +12,6 @@ router.post("/", async (req, res) => {
   const userAddress = reqData.address;
   const toAddress = reqData.toAddress; // Added for DirectChat
   const operationType = reqData.operationType;
-  console.log("reqData: ", reqData);
 
   /** ----------------------
    * ON DIRECT CHAT
@@ -135,8 +133,6 @@ router.post("/", async (req, res) => {
       delete connectUsers[users[1]];
     }
 
-    console.log("connectUsers: ", connectUsers);
-
     res.status(200).json({ status: "END_CHAT" });
   }
 
@@ -155,6 +151,9 @@ router.post("/", async (req, res) => {
     res.status(200).json({ status: "TYPING_ALERT" });
   }
 
+  /**----------------------
+   * ON MESSAGE INCOMING ALERT
+   * ---------------------*/
   if (operationType === "MSG_INCOMING_ALERT") {
     const users = reqData.users as string[];
     const isFocus = reqData.isFocus;
@@ -166,10 +165,6 @@ router.post("/", async (req, res) => {
 
     res.status(200).json({ status: "MSG_INCOMING_ALERT" });
   }
-
-  //     res.status(200).json({ status: "cool man" });
 });
-
-
 
 export default router;

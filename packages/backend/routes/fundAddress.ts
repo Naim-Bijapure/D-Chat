@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 
     let addressBalance: any = await signer.provider.getBalance(address as string);
     addressBalance = ethers.utils.formatEther(addressBalance.toString());
-    console.log("addressBalance: ", Math.round(addressBalance));
+    // console.log("addressBalance: ", Math.round(addressBalance));
 
     //     transfer balance
     if (

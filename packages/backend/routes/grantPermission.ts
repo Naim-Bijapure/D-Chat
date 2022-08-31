@@ -11,7 +11,6 @@ async function grantPersmission(address): Promise<boolean> {
   const erc725: ERC725 = global.erc725;
   const walletSigner: Signer = global.walletSigner;
 
-  //     console.log("grantPersmission: address: ", address);
   try {
     /** ----------------------
      * set the call permission
@@ -35,7 +34,7 @@ async function grantPersmission(address): Promise<boolean> {
       // TRANSFERVALUE: true,
     });
 
-    // step 3.1 - encode the data key-value pairs of the permissions to be set
+    // encode the data key-value pairs of the permissions to be set
     const data = erc725?.encodeData({
       // @ts-ignore
       keyName: "AddressPermissions:Permissions:<address>",
@@ -50,7 +49,7 @@ async function grantPersmission(address): Promise<boolean> {
       data.values[0],
     ]);
 
-    // step 4 - send the transaction via the Key Manager contract
+    // send the transaction via the Key Manager contract
     const tx = await KM.connect(walletSigner).execute(payload, {
       gasLimit: 10000000,
     }); // <---- call the execute on key manager contract
@@ -65,8 +64,6 @@ async function grantPersmission(address): Promise<boolean> {
       dynamicKeyParts: address,
       value: [VAULT_ADDRESS],
     });
-
-    // console.log("allowedAddressData: ", allowedAddressData);
 
     const allowedAddressDataPayload = UP.interface.encodeFunctionData(
       "setData(bytes32[],bytes[])",
@@ -89,7 +86,6 @@ async function grantPersmission(address): Promise<boolean> {
 // define the home page route
 router.get("/", async (req, res) => {
   const address = req.query.address;
-  console.log("address: ", address);
 
   const UP: ethers.Contract = global.UP;
   const KM: ethers.Contract = global.KM;

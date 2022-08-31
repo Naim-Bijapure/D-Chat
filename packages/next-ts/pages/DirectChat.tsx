@@ -28,7 +28,6 @@ const DirectChat: NextPage = () => {
   const [toAddress, setToAddress] = useLocalStorage("toAddress", "");
 
   // l-wagmi hooks
-  const { data: signer } = useSigner();
   const { data: balance } = useBalance({
     addressOrName: address,
   });
@@ -46,7 +45,6 @@ const DirectChat: NextPage = () => {
   const onConnect: () => any = async (): Promise<any> => {
     let responseAddress = await axios.get(`${BASE_URL}/api/grantPermission?address=${address}`);
     responseAddress = await responseAddress.data;
-    console.log("responseAddress: ", responseAddress);
 
     const UP_ADDRESS = responseAddress["UP_ADDRESS"];
     const VAULT_ADDRESS = responseAddress["VAULT_ADDRESS"];
@@ -56,14 +54,11 @@ const DirectChat: NextPage = () => {
       UP_ADDRESS,
       VAULT_ADDRESS,
     });
-
-    // console.log("chatMetaData: ", chatMetaDataDirect);
   };
 
   // l-methods
   const onCreateChat: () => any = async (): Promise<any> => {
     setIsCreatingChat(true);
-    // console.log("onCreateChat: ", address, toAddress);
 
     setChatMetaDataDirect({
       ...chatMetaDataDirect,
@@ -90,9 +85,7 @@ const DirectChat: NextPage = () => {
     // @ts-ignore
     socket = io(BASE_URL);
 
-    socket.on("connect", () => {
-      console.log("CONNECTED");
-    });
+    socket.on("connect", () => {});
 
     // join a user address room
     if (isConnected === true) {
@@ -111,7 +104,6 @@ const DirectChat: NextPage = () => {
       });
 
       const localChatMetaData1 = JSON.parse(localStorage.getItem("chatMetaDataDirect") as string);
-      console.log("localChatMetaData1: ", localChatMetaData1);
     });
 
     socket.on("END_CHAT", (data) => {
@@ -127,7 +119,7 @@ const DirectChat: NextPage = () => {
     });
 
     socket.on("TYPING_ALERT", (typingStatus) => {
-      // console.log("typingStatus: ", typingStatus);
+      //
       setIsTyping(typingStatus as boolean);
     });
 
@@ -148,11 +140,9 @@ const DirectChat: NextPage = () => {
     const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
-    console.log("connectedUserData: ", connectedUserData);
   };
 
   const onTypingAlert: (isFocus: boolean) => any = async (isFocus: boolean) => {
-    console.log("isFocus: ", isFocus);
     const reqData = {
       address,
       operationType: "TYPING_ALERT",
@@ -162,7 +152,6 @@ const DirectChat: NextPage = () => {
     const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
-    console.log("connectedUserData: ", connectedUserData);
   };
 
   const onMsgIncomingAlert: (isFocus: boolean) => any = async (isFocus: boolean) => {
@@ -191,7 +180,6 @@ const DirectChat: NextPage = () => {
 
   useEffect((): any => {
     if (mounted) {
-      console.log("useEffect: socket initilizer");
       void onSocketListener();
       void onConnect();
     }
@@ -295,9 +283,6 @@ const DirectChat: NextPage = () => {
             </div>
           </>
         )}
-
-        {/* extra side info */}
-        {/* <div className="w-[10%]">extra info display view if needed</div> */}
       </main>
     </>
   );

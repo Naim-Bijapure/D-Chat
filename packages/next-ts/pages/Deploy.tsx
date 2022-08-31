@@ -6,12 +6,8 @@ import { useNetwork, useProvider } from "wagmi";
 import account from "../contracts/account.json";
 import { Vault__factory } from "../contracts/contract-types";
 
-// up address
-// 0xe0207dAdFE5f6F5a6ce0a3C7660d592124d9D56A
-// vault address
-// 0x0D46e40d2BFf4aBae72539fa61EC6Ecb6174505B
-/**----------------------
- * TEMP DEPLOYMENT
+/** ----------------------
+ * TEMP DEPLOYMENT FROM UI
  * ---------------------*/
 
 const Deploy: NextPage = () => {
@@ -55,7 +51,7 @@ const Deploy: NextPage = () => {
         LSP4TokenName: "coool",
       });
       console.log("createUniversalProfile:done ");
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+       
       return deployedContracts;
     }
     const output = await createUniversalProfile();

@@ -3,6 +3,8 @@
 
 ## Talk to Strangers in a Decentralized way on Lukso Network
 
+LIVE DEMO: https://lukso-chat-naimbijapure7407.vercel.app
+
 > Start random chats with strangers based on interests, and create direct chats with someone you know from a simple interface! 🚀
 
 ![image](https://user-images.githubusercontent.com/5996795/187472210-d2455f08-b1a8-4f52-af21-02a3ef716807.png)
@@ -26,7 +28,7 @@ A Chat Dapp that is built on the Lukso network and leverages the Lukso Standards
 
 DOmagle is implemented by using UP and Vault standards
 
-![Architecture](https://user-images.githubusercontent.com/5996795/187497726-4e8e26bd-06f1-4cec-984e-79c6f0bb128b.png)
+![Architecture](https://user-images.githubusercontent.com/22323693/187588959-8e7b45ec-0938-434c-b9fe-f17d7370185d.png)
 
 ## UP and Vault Creation
 

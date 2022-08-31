@@ -60,8 +60,8 @@ const luksoChain: Chain = {
 export const targedChains = targetNetowrks([...TARGATED_CHAINS]);
 
 export const { chains, provider } = configureChains(
-  [...targedChains, luksoChain],
-  // [luksoChain],
+  // [...targedChains, luksoChain],
+  [luksoChain],
   [publicProvider()]
 ); // <---- configure your custom chain
 

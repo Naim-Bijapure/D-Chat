@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import axios from "axios";
 import type { NextPage } from "next";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { BsPlusCircle } from "react-icons/bs";
 import { TiDeleteOutline } from "react-icons/ti";
 import { MutatingDots, Watch } from "react-loader-spinner";
 import { Socket } from "socket.io";
 import io from "socket.io-client";
-import { useAccount, useBalance, useSigner } from "wagmi";
-import Image from "next/image";
+import { useAccount, useBalance } from "wagmi";
 
 import ChatView from "../components/Chat/ChatView";
 import { Sleep } from "../components/DebugContract/configs/utils";
@@ -22,10 +22,7 @@ const Home: NextPage = () => {
   // const BASE_URL = window?.location.origin;
 
   // l-states
-  // const [interests, setInterests] = useState<string[]>([]);
   const [currentInterest, setCurrentInterest] = useState<string>("");
-  const [isFinding, setIsFinding] = useState<boolean>(false);
-  const [fetchToggler, setFetchToggler] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [isMsgComing, setIsMsgComing] = useState(false);
@@ -35,12 +32,10 @@ const Home: NextPage = () => {
 
   // l-wagmi hooks
   const { address, isConnected } = useAccount();
-  const { data: signer } = useSigner();
+  // const { data: signer } = useSigner();
   const { data: balance } = useBalance({
     addressOrName: address,
   });
-
-  // const { data } = useBalance({ addressOrName: address });
 
   // l-localStorages  states
   const [chatMetaData, setChatMetaData] = useLocalStorage("chatMetaData", {
@@ -78,23 +73,16 @@ const Home: NextPage = () => {
     setIsCreatingChat(false);
   };
 
-  const onTest: () => any = async (): Promise<any> => {
-    console.log("onTest: ");
-    // window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
-    // const sign = await signer?.signMessage("cool man");
-    // console.log("sign: ", sign);
-
-    console.log("balance: ", balance?.value.toString());
-    // const addr = await signer?.getAddress();
-    // console.log('addr: ', addr);
-  };
+  // const onTest: () => any = async (): Promise<any> => {
+  //   console.log("onTest: ");
+  //   console.log("balance: ", balance?.value.toString());
+  // };
 
   const sendFunds: () => any = async (): Promise<any> => {
     setIsSendingFunds(true);
-    await Sleep(2000);
+    await Sleep(500);
     let response: any = await axios.get(`${BASE_URL}/api/fundAddress/?address=${address}`);
     response = await response.data;
-    console.log("response: ", response);
     if (response.msg === "FUNDED") {
       setSendFundStatus("funded !!");
       window.location.reload();
@@ -117,6 +105,9 @@ const Home: NextPage = () => {
     setInterests(updatedInterestList);
   };
 
+  /** ----------------------
+   * socket events handler
+   * ---------------------*/
   const onSocketListener: () => any = async () => {
     await axios.get(`${BASE_URL}/`);
     // @ts-ignore
@@ -141,15 +132,9 @@ const Home: NextPage = () => {
         DYNAMIC_KEY: data.dynamicKey,
         CHAT_STATUS: "START",
       });
-
-      // const localChatMetaData1 = JSON.parse(localStorage.getItem("chatMetaData") as string);
-      // console.log("localChatMetaData1: ", localChatMetaData1);
     });
 
     socket.on("END_CHAT", (data) => {
-      // console.log('"END_CHAT": ', data);
-      // console.log("chatMetaData: ", chatMetaData);
-
       const localChatMetaData = JSON.parse(localStorage.getItem("chatMetaData") as string);
 
       setChatMetaData({
@@ -165,7 +150,6 @@ const Home: NextPage = () => {
       // console.log("typingStatus: ", typingStatus);
       setIsTyping(typingStatus as boolean);
 
-      // await Sleep(400);
       window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
     });
 
@@ -212,18 +196,6 @@ const Home: NextPage = () => {
     console.log("connectedUserData: ", connectedUserData);
   };
 
-  const onEndChat: () => any = async () => {
-    const reqData = {
-      address,
-      operationType: "END_CHAT",
-      users: chatMetaData.chatUsers,
-    };
-    const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
-      ...reqData,
-    });
-    console.log("connectedUserData: ", connectedUserData);
-  };
-
   const onTypingAlert: (isFocus: boolean) => any = async (isFocus: boolean) => {
     const reqData = {
       address,
@@ -234,7 +206,6 @@ const Home: NextPage = () => {
     const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
-    // console.log("connectedUserData: ", connectedUserData);
   };
 
   const onMsgIncomingAlert: (isFocus: boolean) => any = async (isFocus: boolean) => {
@@ -247,7 +218,6 @@ const Home: NextPage = () => {
     const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
       ...reqData,
     });
-    // console.log("connectedUserData: ", connectedUserData);
   };
 
   // l-useEffects
@@ -316,6 +286,7 @@ const Home: NextPage = () => {
               find random chat
             </button>
 
+            {/* warn and quick fund */}
             {balance?.value.toString() === "0" && (
               <>
                 <div className="m-2 text-warning">
@@ -328,7 +299,7 @@ const Home: NextPage = () => {
                     className="link-primary">
                     https://faucet.l16.lukso.network
                   </a>
-                  <div className="text-primary">Or</div>
+                  <div className="text-xl text-black">Or</div>
                   <div className="text-success">get a quick fund to test (click below button)</div>
                   <div>
                     <button className="btn btn-secondary" onClick={sendFunds}>
@@ -356,7 +327,6 @@ const Home: NextPage = () => {
                 </div>
               </>
             )}
-            {/* <div className="m-1">{isFinding && <progress className="w-56 progress progress-primary" />}</div> */}
 
             {isCreatingChat && (
               <div className="flex flex-col justify-center m-1 ">
@@ -427,9 +397,6 @@ const Home: NextPage = () => {
             </div>
           </>
         )}
-
-        {/* extra side info */}
-        {/* <div className="w-[10%]">extra info display view if needed</div> */}
       </main>
     </>
   );

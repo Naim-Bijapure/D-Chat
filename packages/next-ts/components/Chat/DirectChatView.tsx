@@ -12,7 +12,7 @@ import type { NextPage } from "next";
 import React, { useEffect, useRef, useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TbSend } from "react-icons/tb";
-import { FallingLines, RotatingSquare, ThreeDots, Comment } from "react-loader-spinner";
+import { FallingLines, RotatingSquare, Comment } from "react-loader-spinner";
 import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
 
 import { BASE_URL } from "../../constants";
@@ -88,10 +88,8 @@ const DirectChatView: NextPage<IChatView> = ({
     const vault: Vault = new ethers.Contract(VAULT_ADDRESS as string, Vault__factory.abi as ContractInterface, signer);
     // contracts
     const up = new ethers.Contract(UP_ADDRESS as string, UniversalProfile.abi, signer as Signer);
-    console.log("myUP: ", up);
 
     const ownerUP = await up?.owner(); // <---- get owner of UP contract
-    console.log("ownerUP: ", ownerUP);
 
     const km = new ethers.Contract(ownerUP as string, KeyManager.abi, signer as Signer);
 
@@ -105,7 +103,7 @@ const DirectChatView: NextPage<IChatView> = ({
   const loadMessages: () => any = () => {
     vault.on("DataChanged", async (dataKey) => {
       if (dynamicKey === dataKey) {
-        // console.log("message data changed event  ");
+        //
 
         const users = [...chatMetaData["chatUsers"]];
 
@@ -119,7 +117,7 @@ const DirectChatView: NextPage<IChatView> = ({
         });
 
         const oldValues = vaultDecodedStringBefore?.value !== null ? vaultDecodedStringBefore?.value : [];
-        // console.log("load messages oldValues: ", oldValues);
+        //
         const messages: any[] = [];
         if (Array.isArray(oldValues)) {
           // oldValues.map((msg: string) => messages.push(JSON.parse(msg)));
@@ -167,7 +165,7 @@ const DirectChatView: NextPage<IChatView> = ({
       let oldData = vaultDecodedStringBefore?.value !== null ? vaultDecodedStringBefore?.value : [];
       oldData = oldData.filter((msg) => Boolean(msg) === true);
 
-      // console.log("oldData: ", oldData);
+      //
 
       const msgData = {
         address: address,
@@ -218,7 +216,6 @@ const DirectChatView: NextPage<IChatView> = ({
 
       onTypingAlert(false);
     } catch (error) {
-      console.log("error: ", error);
       window.location.reload();
     }
   };
@@ -258,7 +255,6 @@ const DirectChatView: NextPage<IChatView> = ({
       const rcpt = await tx.wait();
       return true;
     } catch (error) {
-      console.log("error: ", error);
       return false;
     }
   };
@@ -276,7 +272,6 @@ const DirectChatView: NextPage<IChatView> = ({
         const { data: connectedUserData } = await axios.post<connectUserReponseType>(`${BASE_URL}/api/connectUser`, {
           ...reqData,
         });
-        console.log("connectedUserData: ", connectedUserData);
 
         setChatMetaData({ ...chatMetaData, activeChat: false });
       }
@@ -284,9 +279,7 @@ const DirectChatView: NextPage<IChatView> = ({
       if (isChatCleared === false) {
         setChatMetaData({ ...chatMetaData, CHAT_STATUS: "START" });
       }
-    } catch (error) {
-      console.log("error: ", error);
-    }
+    } catch (error) {}
   };
 
   const onDeleteChat: () => any = async (): Promise<any> => {
@@ -324,7 +317,6 @@ const DirectChatView: NextPage<IChatView> = ({
     if (window) {
       window.document.getElementById("LATEST_MESSAGE")?.scrollIntoView({ behavior: "smooth" });
 
-      console.log("msg length", messagesData.length, messagesCount.current);
       if (messagesData.length !== messagesCount.current) {
         onMsgIncomingAlert(false);
       }
@@ -369,16 +361,15 @@ const DirectChatView: NextPage<IChatView> = ({
   return (
     <>
       <div className="flex flex-col items-start justify-center h-[100%] ">
-        {/* <div className=""> */}
-
         <div className="text-xs text-accent">If tx gets slow please supply more gas {"fee's"}</div>
+        {/* ADDRESS INFO */}
         <div className="flex items-center justify-between w-1/2">
           <div>You are chatting with:</div>{" "}
           <div>
             <Address address={fromAddress} isBalance={false} provider={provider} price={0} />
           </div>
         </div>
-        {/* chat messages */}
+        {/* CHAT MESSAGES */}
         <div className="p-2 overflow-y-scroll rounded-lg bg-base-200 bg--gray-100 p--8 w-[80%] h-[80vh]">
           <div className="max-w-4xl mx-auto space-y--12 space-y-4 grid grid-cols-1  ">
             {messagesData &&
@@ -409,7 +400,7 @@ const DirectChatView: NextPage<IChatView> = ({
                 );
               })}
           </div>
-          {/* find chat loading screen */}
+          {/* FIND CHAT LOADING SCREEN */}
           <div className="h--[70vh] ">
             {messagesData && messagesData.length === 0 && (
               <div className="flex flex-col items-center justify-center">
